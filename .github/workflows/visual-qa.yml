@@ -1,0 +1,43 @@
+name: NAKO GOLD Visual QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'assets/**'
+      - 'tests/**'
+      - '.github/workflows/visual-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium browser test dependencies
+        run: |
+          npm init -y >/dev/null
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Start local HTTP server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/nako-qa-server.log 2>&1 &
+          sleep 2
+      - name: Run responsive and interaction checks
+        run: node tests/site-qa.cjs
+      - name: Upload screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nako-gold-visual-qa
+          path: qa-screenshots/
+          if-no-files-found: ignore
+          retention-days: 14
