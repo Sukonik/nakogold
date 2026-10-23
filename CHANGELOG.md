@@ -1,5 +1,13 @@
 # NAKO GOLD — Changelog
 
+## v2.0.2 · 2026-10-23 — Editorial design and responsive QA
+
+- Reduced oversized homepage hero typography, portrait scale and unnecessary vertical bulk.
+- Applied restrained black-and-gold editorial spacing, clean typography, low-noise cards, and calibrated page heading scales across phone and desktop.
+- Preserved all eight themes, Signal Deck, Spotify Album 01, artist management, and the minimal image strategy.
+- Added automatic Playwright/Chromium QA for seven pages and seven responsive widths, including navigation, theme persistence and horizontal overflow assertions.
+- Verified browser QA **PASS** and GitHub Pages deployment **SUCCESS** on 2026-10-23, commit `b8c8cda`; screenshots saved as the workflow artifact.
+
 ## v2.0.1 · 2026-10-23 — Black & Gold + NightDrive
 
 - Eight total color themes: **Black & Gold** (default), Trance, House, Techno, PulseWave, SynthPop, EuroDance and **NightDrive** (midnight violet/neon red).
