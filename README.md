@@ -1,126 +1,79 @@
-# NAKO GOLD 🎵 · Gold Earth Records
-### *Euphoric trance. High-energy house. Electronic music without limits.*
+# NAKO GOLD 🎛️ — Gold Earth Records
 
-🌐 **Website V2:** https://sukonik.github.io/nakogold/  
-🎧 **Spotify artist:** https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L  
-💿 **Featured Album 01:** https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G  
-🚀 **Release:** v2.0.2 · published from `main` using GitHub Pages (deployment status must be checked separately)
+**Euphoric trance · high-energy house · electronic dance music**
+
+[Official website](https://sukonik.github.io/nakogold/) · [Spotify artist](https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L) · [Album 01](https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G)
+
+**Release:** V3.0.0 · editorial design and single-menu navigation. GitHub Pages is published from `main`. Work on `v3/editorial-style-dropdown` is a review branch until merged and deployed.
 
 > NAKO GOLD blends euphoric trance, high-energy house, and hard-hitting electronic dance music into a sound built for the dance floor. Driven by soaring melodies, explosive drops, futuristic synths, and emotional vocals, NAKO GOLD creates immersive sonic journeys that fuse underground intensity with big-room energy. Every track is an invitation to lose yourself in the music.
 
-**Artist creation notes:** Original human-written lyrics and artistic direction, with AI-assisted composition and production. Do not claim entirely traditional composition; disclose AI use accurately under each platform's current policies.
+**Creative process:** Human-written lyrics and artistic direction, supported by AI-assisted composition and production. Credit AI involvement accurately under each platform's rules.
 
----
+## The V3 design
 
-## 🎛️ V2 — The Frequency Deck
+The site is **text-first, minimalist and responsive**, inspired by the disciplined interface approach of [GoldSea](https://github.com/Sukonik/goldsea), [GoldRang3r](https://github.com/Sukonik/goldrang3r), [Chakra UI](https://github.com/chakra-ui/chakra-ui) and [Base UI](https://github.com/mui/base-ui). These are design references, not copied packages. All HTML, CSS and JS are locally served, with no Tailwind CDN, npm build step or React runtime.
 
-Eight music-inspired color systems, each with independently tuned surfaces, neon accents, atmosphere and interactive focus treatments:
+**Navigation:** One desktop header with Home, Music, Visuals, About, Discovery, and **Style ▾**. On mobile, a **single hamburger** opens the site links and a compact Style selector. There is no permanent frequency ribbon or separate Signal Deck overlay.
 
-| Frequency | Color direction |
+**Eight styles:** Black & Gold (**default**), Trance, House, Techno, PulseWave, SynthPop, EuroDance, NightDrive. All are expressed as CSS variables only; selecting one saves it as `nako-theme` in localStorage. Content does not change between themes.
+
+**Artist imagery:** Use the official enhanced neon portrait on Home and About, Album 01 cover on Music, and a small curated Visuals gallery. Additional concept assets remain organized in the repo. Concept stage imagery is **not** proof of real performances.
+
+**Favicon:** Unique black-and-gold NG monogram at `assets/favicon.svg`, usable as the browser tab icon and header mark.
+
+## Pages
+
+| Page | Destination |
 | --- | --- |
-| ⚜️ **Black & Gold** | Signature matte black · luminous gold (**default**) |
-| ✨ **Trance** | Electric cyan · ultraviolet |
-| 🔊 **House** | Golden amber · warm coral |
-| 🟢 **Techno** | Acid lime · underground green |
-| 🌊 **PulseWave** | Electric cobalt · magenta |
-| 💖 **SynthPop** | Candy pink · ice blue |
-| 💿 **EuroDance** | Bright yellow · royal blue |
-| 🌃 **NightDrive** | Dark violet · neon red |
+| Home | [Website](https://sukonik.github.io/nakogold/) |
+| Music and Album 01 | [Releases](https://sukonik.github.io/nakogold/music.html) |
+| Visuals | [Selected visual identity](https://sukonik.github.io/nakogold/visuals.html) |
+| About | [NAKO GOLD / Gold Earth Records](https://sukonik.github.io/nakogold/about.html) |
+| Discovery | [Free-first music marketing and organic discovery](https://sukonik.github.io/nakogold/marketing.html) |
+| Artist Management | [Unlisted operations launchpad](./artist-management.html) — NOT an authenticated page |
 
-Theme selection is immediate, shared across pages, and stored locally in the browser as `nako-theme`. Default = **Black & Gold**. No external theme or analytics service is needed.
+### Artist Management privacy
+Artist Management launches Spotify's own authenticated tools. **It is not private** just because it is absent from navigation. No owner email, passwords, listener analytics, collaborator rosters or sensitive financial records belong in the public GitHub Pages repo. See [security notes](docs/ARTIST_MANAGEMENT.md).
 
-**V2.0.1 visual direction:** Text-first editorial design. The homepage features a single artist portrait; the Music page features one album cover; the About page features one portrait. All remaining artwork is curated in a restrained Visuals gallery or kept in the source asset archive. Images inspire the color and mood without dominating navigation, card layouts, or discovery pages.
-
-**Signal Deck:** An expandable full-screen music-portal navigation, with numbered destinations, the featured Spotify release, and genre theme controls. The site supports Escape-to-close, keyboard focus containment, and reduced-motion preferences. Narrow screens use a single accessible menu button and a horizontal scrollable theme rail.
-
----
-
-## 🌐 Pages
-
-| Page | Role | Live URL (after Pages deployment) |
-| --- | --- | --- |
-| Home | Artist hero portrait, featured album, music identity | [Open](https://sukonik.github.io/nakogold/) |
-| Music | Featured album, Spotify player and catalog link | [Open](https://sukonik.github.io/nakogold/music.html) |
-| Visuals | Official art library, logos and concept-performance imagery | [Open](https://sukonik.github.io/nakogold/visuals.html) |
-| About | Full artist biography, creative direction and label identity | [Open](https://sukonik.github.io/nakogold/about.html) |
-| Discovery | Free-first music marketing directory and filters | [Open](https://sukonik.github.io/nakogold/marketing.html) |
-| Artist Management | Unlisted public launchpad for Spotify authenticated services | [Source](./artist-management.html) |
-
-**Safety:** Artist Management is *not* an authenticated private dashboard. It is intentionally absent from public navigation, but its URL and source remain public. Passwords, account-owner email, OAuth tokens, financial records, team rosters, and private analytics must not be placed in this repository or GitHub Pages. Admin-level actions occur on Spotify.
-
----
-
-## 🖼️ Licensed artist assets
-
-The enhanced neon-portrait image is the **official primary headshot** for V2. Artist-supplied originals and derivatives are organized under:
+## Source architecture
 
 ```text
+index.html, music.html, visuals.html, about.html, marketing.html
+artist-management.html, 404.html
 assets/
+  favicon.svg                 Unique NG browser/favicon mark
+  v3.js                       Mobile navigation, Style menu and discovery filters
   images/
-    nako-gold/
-      artist-portrait.webp            # enhanced primary neon portrait
-      portrait-artist-original.webp   # alternate provided portrait
-    art/
-      album-01-car.webp               # Spotify Album 01 car cover
-    logos/
-      nako-gold-24k.webp
-      nako-gold-neon.webp
-      nako-gold-iridescent.webp
-    live/
-      stage-sunset.webp               # performance-inspired concept artwork
-      miami-nightclub.webp            # performance-inspired concept artwork
+    nako-gold/                Primary headshot and alternate portrait
+    art/                      Album 01 car cover
+    logos/                    Official gold, neon and iridescent references
+    live/                     Performance-inspired concept artwork
+css/
+  v3-tokens.css               Black & Gold plus seven optional palettes
+  v3-base.css                 Semantic typography, containers and light utilities
+  v3-components.css           Header, menus, cards, CTAs, pages and forms
+  v3-responsive.css           Fluid tablet/mobile breakpoints
+tests/site-qa.cjs             Chromium/Playwright responsive + menu tests
+.github/workflows/visual-qa.yml  Automated browser checks
 ```
 
-`live/` assets are **concept artwork**, not evidence of booked or completed performances. Do not advertise events using these without confirmation.
+## GitHub Pages and verification
 
-### Source and image standards
-- Images are optimized WebP derivatives of owner-provided visuals, with descriptive alt text.
-- Most images load lazily; above-the-fold portrait is prioritized.
-- Keep an archival copy of full-resolution originals outside the public repo.
-- The Album 01 artwork links to the owner's actual Spotify album.
-- The enhanced portrait must not be silently substituted with generic stock photography.
+1. Merge the V3 branch through its pull request after browser QA succeeds.
+2. GitHub Pages deploys the `main` branch root. [Check deployments](https://github.com/Sukonik/nakogold/actions).
+3. Test widths **320, 375, 390, 430, 768, 1024, 1440, and 1920px**, reduced motion, no-JS fallback and keyboard.
+4. QA tests the menu, dropdown, all eight themes, persistence across routes, Discover filters, overflow, and console exceptions. [QA workflow](https://github.com/Sukonik/nakogold/actions/workflows/visual-qa.yml).
+5. Inspect desktop/mobile screenshots generated as a GitHub Actions artifact. Avoid announcing launch until the Pages deployment succeeds.
 
----
+### Quality and ethics
+No fake streams, paid bot plays or guaranteed engagement. Third-party music promotion services may reject AI-assisted music; verify policies before submission. SEO metadata identifies the artist accurately. No invented releases or performance bookings.
 
-## 🧰 Technology
+## Version history
 
-- Static HTML5 / CSS custom properties / vanilla JavaScript; no frameworks, npm, or build pipeline.
-- V2 eight-theme system: `assets/site.css`; accessibility and menus: `assets/site.js`.
-- Site-wide canonical URLs, Open Graph/Twitter metadata, descriptive titles, music genre summary and `MusicGroup` structured data.
-- Responsive one-, two-, and three-column grids; safe narrow-screen menus and horizontal theme selector.
-- User-selected themes do not require logins or connected apps.
-- Marketing directory only links to destination platforms—not to public GitHub source from visitor-facing cards.
-- On mobile with JavaScript disabled, the `<noscript>` fallback provides navigation.
+- **V3.0.0** — GoldSea/GoldRang3r-inspired editorial layout, NG favicon, responsive single menu and Style dropdown, 8 themes.
+- **V2.0.2** — Initial typography cleanup and browser screenshot checks.
+- **V2.0.1** — Black & Gold default and NightDrive added.
+- **V2.0.0** — First music-themed site and artist imagery.
 
-## 🧪 V2.0.2 responsive visual QA
-
-Version 2.0.2 refines the original V2 into a **minimal, typography-first music site**: the portrait is deliberately smaller; the hero titles have bounded fluid type; release sections and links receive generous whitespace; cards use understated borders rather than oversized artwork or hover motion.
-
-**Automated real-browser QA:** [NAKO GOLD Visual QA workflow](https://github.com/Sukonik/nakogold/actions/workflows/visual-qa.yml). The first passing browser test is [run #40020903861](https://github.com/Sukonik/nakogold/actions/runs/40020903861).
-
-- Seven page routes (including 404) × seven browser widths (320, 375, 390, 430, 768, 1024, and 1440px).
-- Verifies meaningful page structure, responsive title boundaries, no horizontal page overflow, default Black & Gold.
-- Checks Signal Deck open/Escape close, all eight theme selectors, theme persistence, and Discovery filters.
-- Captures full-page desktop (1440px) and phone (390px) screenshots as the `nako-gold-visual-qa` workflow artifact.
-- Tests run against the repository's served static pages, not authenticated Spotify UI.
-- The workflow confirms structural/browser behavior; design and content remain subject to owner review. Spotify player content depends on Spotify's actual third-party availability.
-
-## 🚀 GitHub Pages publishing and testing
-
-**Hosting source:** GitHub Pages → `main` branch, root (`/`). Avoid switching to a different branch without approval.
-
-1. Check [GitHub Pages deployment runs](https://github.com/Sukonik/nakogold/actions) for successful deployment.
-2. Open https://sukonik.github.io/nakogold/ and refresh hard if necessary.
-3. Verify the eight themes and stored selection on every page.
-4. Test Signal Deck opening/closing, ESC, focus loop, tap targets and links.
-5. Inspect layouts at 320, 375, 390, 430, 768, 1024, 1440, and 1920px widths, plus landscape and 200% zoom.
-6. Verify 8 image assets load, Spotify album/player links, no console errors and marketing filters with JS on/off.
-7. Do not publish fake streaming counts or promise playlist placements; curator AI music acceptance varies.
-
-### Artist-management notes
-See [docs/ARTIST_MANAGEMENT.md](./docs/ARTIST_MANAGEMENT.md). Future private management requires real authentication and a suitable backend, not hidden pages.
-
----
-
-**NAKO GOLD / Gold Earth Records** · GoldenSunAI creative ecosystem ☀️  
-Built for the dance floor. Designed for discovery.
+© 2026 NAKO GOLD · Gold Earth Records
