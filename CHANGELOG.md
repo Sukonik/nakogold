@@ -1,5 +1,15 @@
 # NAKO GOLD — Changelog
 
+## v3.0.0 · 2026-10-23 — Editorial identity + single Style menu
+
+- Replaced the persistent “Tune your frequency” bar, oversized Signal Deck overlay and duplicated navigation with a minimalist single-row header inspired by GoldSea's UI rhythm.
+- Introduced the compact **Style ▾** dropdown on desktop; the same eight themes are organized inside one mobile hamburger menu, with keyboard and Escape support.
+- Retained Black & Gold default, Trance, House, Techno, PulseWave, SynthPop, EuroDance and NightDrive theme preferences across pages.
+- New original SVG favicon — black-and-gold **NG** monogram — used in the header and browser tab.
+- Rebuilt the UI with modular CSS tokens, components and responsive utilities influenced by GoldSea and GoldRang3r, with no Tailwind/Chakra/React runtime dependencies.
+- Preserved original artist headshot, official Album 01 cover, Spotify embeds, curated visuals, SEO and Discovery directory; secured public management information.
+- Added automated Chromium QA for 7 routes × 8 responsive widths, Style dropdown and mobile navigation, image/menu behavior and screenshot review.
+
 ## v2.0.2 · 2026-10-23 — Editorial design and responsive QA
 
 - Reduced oversized homepage hero typography, portrait scale and unnecessary vertical bulk.
