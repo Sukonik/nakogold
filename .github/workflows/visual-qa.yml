@@ -2,12 +2,14 @@ name: NAKO GOLD Visual QA
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'v3/**']
     paths:
       - '*.html'
       - 'assets/**'
       - 'tests/**'
       - '.github/workflows/visual-qa.yml'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
