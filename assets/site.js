@@ -1,19 +1,19 @@
 /* NAKO GOLD V2: lightweight accessible controls, no API keys, no tracking. */
 (function(){
 "use strict";
-var themes=["trance","house","techno","pulsewave","synthpop","eurodance"];
-var labels={trance:"Trance",house:"House",techno:"Techno",pulsewave:"PulseWave",synthpop:"SynthPop",eurodance:"EuroDance"};
+var themes=["gold","trance","house","techno","pulsewave","synthpop","eurodance","nightdrive"];
+var labels={gold:"Black & Gold",nightdrive:"NightDrive",trance:"Trance",house:"House",techno:"Techno",pulsewave:"PulseWave",synthpop:"SynthPop",eurodance:"EuroDance"};
 var root=document.documentElement, portal=document.getElementById("signal-portal");
 var themeButtons=[].slice.call(document.querySelectorAll("[data-theme-choice]"));
 var labelNodes=[].slice.call(document.querySelectorAll("[data-current-theme]"));
 function theme(t){
- if(themes.indexOf(t)===-1)t="trance";
+ if(themes.indexOf(t)===-1)t="gold";
  root.dataset.theme=t;
  themeButtons.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.themeChoice===t))});
  labelNodes.forEach(function(el){el.textContent=labels[t]});
  try{localStorage.setItem("nako-theme",t)}catch(_){}
 }
-theme(root.dataset.theme||"trance");
+theme(root.dataset.theme||"gold");
 themeButtons.forEach(function(b){b.addEventListener("click",function(){theme(b.dataset.themeChoice)})});
 var openers=[].slice.call(document.querySelectorAll("[data-open-portal]"));
 var closer=portal&&portal.querySelector("[data-close-portal]");
