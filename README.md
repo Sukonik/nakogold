@@ -4,7 +4,7 @@
 
 [Official website](https://sukonik.github.io/nakogold/) · [Spotify artist](https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L) · [Album 01](https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G)
 
-**Release:** V3.0.0 · editorial design and single-menu navigation. GitHub Pages is published from `main`. Work on `v3/editorial-style-dropdown` is a review branch until merged and deployed.
+**Release:** V3.0.0 · editorial design and single-menu navigation. GitHub Pages is published from `main`. Merged to `main` via [PR #4](https://github.com/Sukonik/nakogold/pull/4); GitHub Pages publishes from `main`.
 
 > NAKO GOLD blends euphoric trance, high-energy house, and hard-hitting electronic dance music into a sound built for the dance floor. Driven by soaring melodies, explosive drops, futuristic synths, and emotional vocals, NAKO GOLD creates immersive sonic journeys that fuse underground intensity with big-room energy. Every track is an invitation to lose yourself in the music.
 
@@ -60,7 +60,7 @@ tests/site-qa.cjs             Chromium/Playwright responsive + menu tests
 
 ## GitHub Pages and verification
 
-1. Merge the V3 branch through its pull request after browser QA succeeds.
+1. V3 is merged in [PR #4](https://github.com/Sukonik/nakogold/pull/4) after responsive browser QA passed.
 2. GitHub Pages deploys the `main` branch root. [Check deployments](https://github.com/Sukonik/nakogold/actions).
 3. Test widths **320, 375, 390, 430, 768, 1024, 1440, and 1920px**, reduced motion, no-JS fallback and keyboard.
 4. QA tests the menu, dropdown, all eight themes, persistence across routes, Discover filters, overflow, and console exceptions. [QA workflow](https://github.com/Sukonik/nakogold/actions/workflows/visual-qa.yml).
@@ -68,6 +68,10 @@ tests/site-qa.cjs             Chromium/Playwright responsive + menu tests
 
 ### Quality and ethics
 No fake streams, paid bot plays or guaranteed engagement. Third-party music promotion services may reject AI-assisted music; verify policies before submission. SEO metadata identifies the artist accurately. No invented releases or performance bookings.
+
+## Maintenance
+
+Legacy V2 `assets/site.css`, `assets/site.js` and `assets/marketing.js` were retired after migration. V3 uses only `css/v3-*.css` and `assets/v3.js`; there is no duplicated interactive framework.
 
 ## Version history
 
