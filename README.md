@@ -4,7 +4,7 @@
 🌐 **Website V2:** https://sukonik.github.io/nakogold/  
 🎧 **Spotify artist:** https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L  
 💿 **Featured Album 01:** https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G  
-🚀 **Release:** v2.0.0 · published from `main` using GitHub Pages (deployment status must be checked separately)
+🚀 **Release:** v2.0.1 · published from `main` using GitHub Pages (deployment status must be checked separately)
 
 > NAKO GOLD blends euphoric trance, high-energy house, and hard-hitting electronic dance music into a sound built for the dance floor. Driven by soaring melodies, explosive drops, futuristic synths, and emotional vocals, NAKO GOLD creates immersive sonic journeys that fuse underground intensity with big-room energy. Every track is an invitation to lose yourself in the music.
 
@@ -14,18 +14,22 @@
 
 ## 🎛️ V2 — The Frequency Deck
 
-Six music-inspired color systems, each with independently tuned surfaces, neon accents, atmosphere and interactive focus treatments:
+Eight music-inspired color systems, each with independently tuned surfaces, neon accents, atmosphere and interactive focus treatments:
 
 | Frequency | Color direction |
 | --- | --- |
+| ⚜️ **Black & Gold** | Signature matte black · luminous gold (**default**) |
 | ✨ **Trance** | Electric cyan · ultraviolet |
 | 🔊 **House** | Golden amber · warm coral |
 | 🟢 **Techno** | Acid lime · underground green |
 | 🌊 **PulseWave** | Electric cobalt · magenta |
 | 💖 **SynthPop** | Candy pink · ice blue |
 | 💿 **EuroDance** | Bright yellow · royal blue |
+| 🌃 **NightDrive** | Dark violet · neon red |
 
-Theme selection is immediate, shared across pages, and stored locally in the browser as `nako-theme`. Default = **Trance**. No external theme or analytics service is needed.
+Theme selection is immediate, shared across pages, and stored locally in the browser as `nako-theme`. Default = **Black & Gold**. No external theme or analytics service is needed.
+
+**V2.0.1 visual direction:** Text-first editorial design. The homepage features a single artist portrait; the Music page features one album cover; the About page features one portrait. All remaining artwork is curated in a restrained Visuals gallery or kept in the source asset archive. Images inspire the color and mood without dominating navigation, card layouts, or discovery pages.
 
 **Signal Deck:** An expandable full-screen music-portal navigation, with numbered destinations, the featured Spotify release, and genre theme controls. The site supports Escape-to-close, keyboard focus containment, and reduced-motion preferences. Narrow screens use a single accessible menu button and a horizontal scrollable theme rail.
 
@@ -81,7 +85,7 @@ assets/
 ## 🧰 Technology
 
 - Static HTML5 / CSS custom properties / vanilla JavaScript; no frameworks, npm, or build pipeline.
-- V2 theme system: `assets/site.css`; accessibility and menus: `assets/site.js`.
+- V2 eight-theme system: `assets/site.css`; accessibility and menus: `assets/site.js`.
 - Site-wide canonical URLs, Open Graph/Twitter metadata, descriptive titles, music genre summary and `MusicGroup` structured data.
 - Responsive one-, two-, and three-column grids; safe narrow-screen menus and horizontal theme selector.
 - User-selected themes do not require logins or connected apps.
@@ -94,7 +98,7 @@ assets/
 
 1. Check [GitHub Pages deployment runs](https://github.com/Sukonik/nakogold/actions) for successful deployment.
 2. Open https://sukonik.github.io/nakogold/ and refresh hard if necessary.
-3. Verify the six themes and stored selection on every page.
+3. Verify the eight themes and stored selection on every page.
 4. Test Signal Deck opening/closing, ESC, focus loop, tap targets and links.
 5. Inspect layouts at 320, 375, 390, 430, 768, 1024, 1440, and 1920px widths, plus landscape and 200% zoom.
 6. Verify 8 image assets load, Spotify album/player links, no console errors and marketing filters with JS on/off.
