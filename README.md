@@ -4,7 +4,7 @@
 🌐 **Website V2:** https://sukonik.github.io/nakogold/  
 🎧 **Spotify artist:** https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L  
 💿 **Featured Album 01:** https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G  
-🚀 **Release:** v2.0.1 · published from `main` using GitHub Pages (deployment status must be checked separately)
+🚀 **Release:** v2.0.2 · published from `main` using GitHub Pages (deployment status must be checked separately)
 
 > NAKO GOLD blends euphoric trance, high-energy house, and hard-hitting electronic dance music into a sound built for the dance floor. Driven by soaring melodies, explosive drops, futuristic synths, and emotional vocals, NAKO GOLD creates immersive sonic journeys that fuse underground intensity with big-room energy. Every track is an invitation to lose yourself in the music.
 
@@ -91,6 +91,19 @@ assets/
 - User-selected themes do not require logins or connected apps.
 - Marketing directory only links to destination platforms—not to public GitHub source from visitor-facing cards.
 - On mobile with JavaScript disabled, the `<noscript>` fallback provides navigation.
+
+## 🧪 V2.0.2 responsive visual QA
+
+Version 2.0.2 refines the original V2 into a **minimal, typography-first music site**: the portrait is deliberately smaller; the hero titles have bounded fluid type; release sections and links receive generous whitespace; cards use understated borders rather than oversized artwork or hover motion.
+
+**Automated real-browser QA:** [NAKO GOLD Visual QA workflow](https://github.com/Sukonik/nakogold/actions/workflows/visual-qa.yml). The first passing browser test is [run #40020903861](https://github.com/Sukonik/nakogold/actions/runs/40020903861).
+
+- Seven page routes (including 404) × seven browser widths (320, 375, 390, 430, 768, 1024, and 1440px).
+- Verifies meaningful page structure, responsive title boundaries, no horizontal page overflow, default Black & Gold.
+- Checks Signal Deck open/Escape close, all eight theme selectors, theme persistence, and Discovery filters.
+- Captures full-page desktop (1440px) and phone (390px) screenshots as the `nako-gold-visual-qa` workflow artifact.
+- Tests run against the repository's served static pages, not authenticated Spotify UI.
+- The workflow confirms structural/browser behavior; design and content remain subject to owner review. Spotify player content depends on Spotify's actual third-party availability.
 
 ## 🚀 GitHub Pages publishing and testing
 
