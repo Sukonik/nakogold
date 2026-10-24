@@ -9,7 +9,7 @@ const widths=[320,375,390,430,768,1024,1440,1920];
 const themes=["gold","trance","house","techno","pulsewave","synthpop","eurodance","nightdrive"];
 const SPOTIFY=/^https:\/\/(open|accounts)\.spotify\.com\//;
 fs.mkdirSync("qa-screenshots",{recursive:true});
-const closed=async loc=>{try{await loc.waitFor({state:"hidden",timeout:1000});return true}catch(_){return false}};
+const closed=async loc=>{try{await loc.waitFor({state:"hidden",timeout:3000});return true}catch(_){return false}};
 const errors=[];const fail=x=>errors.push(x);
 let checks=0;const ok=(cond,msg)=>{checks++;if(!cond)fail(msg)};
 
@@ -28,9 +28,14 @@ async function layoutChecks(browser,type){
      const main=document.querySelector("main"),h=main?.querySelector("h1"),b=h?.getBoundingClientRect();
      const imgs=[...document.images].filter(i=>!i.closest(".brand"));
      const vis=s=>{const e=document.querySelector(s);return !!e&&getComputedStyle(e).display!=="none"};
+     const vis2=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&!e.closest("[hidden],[inert]")&&getComputedStyle(e).visibility!=="hidden"};
+     const smallTargets=[...document.querySelectorAll("a,button")].filter(e=>vis2(e)&&!e.closest(".mobile-panel:not(.is-open),.style-popover:not(.is-open)")&&(e.getBoundingClientRect().height<44||e.getBoundingClientRect().width<44)).map(e=>(e.className||e.tagName)+" "+Math.round(e.getBoundingClientRect().width)+"x"+Math.round(e.getBoundingClientRect().height));
+     const tinyText=[...document.querySelectorAll("header *,main *,footer *")].filter(e=>vis2(e)&&[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())&&parseFloat(getComputedStyle(e).fontSize)<11.5).map(e=>(e.className||e.tagName)+" "+getComputedStyle(e).fontSize);
      const wide=[...document.querySelectorAll("main *")].filter(e=>e.getBoundingClientRect().right>innerWidth+1&&!e.closest("[hidden]")).length;
-     return{overflow:document.documentElement.scrollWidth-innerWidth,theme:document.documentElement.dataset.theme,text:main?.textContent.trim().length||0,hL:b?.left,hR:b?.right,header:!!document.querySelector(".site-header"),footer:!!document.querySelector("footer"),nav:vis(".primary-nav"),burger:vis(".menu-toggle"),legacy:!!document.querySelector(".portal,.frequency-bar"),noDims:imgs.filter(i=>!i.getAttribute("width")||!i.getAttribute("height")).length,noAlt:imgs.filter(i=>!i.hasAttribute("alt")).length,wide,h1:document.querySelectorAll("h1").length,mobilePanelTabbable:!!document.querySelector("#mobile-menu:not(.is-open)")&&!document.querySelector("#mobile-menu").inert}});
+     return{smallTargets,tinyText,overflow:document.documentElement.scrollWidth-innerWidth,theme:document.documentElement.dataset.theme,text:main?.textContent.trim().length||0,hL:b?.left,hR:b?.right,header:!!document.querySelector(".site-header"),footer:!!document.querySelector("footer"),nav:vis(".primary-nav"),burger:vis(".menu-toggle"),legacy:!!document.querySelector(".portal,.frequency-bar"),noDims:imgs.filter(i=>!i.getAttribute("width")||!i.getAttribute("height")).length,noAlt:imgs.filter(i=>!i.hasAttribute("alt")).length,wide,h1:document.querySelectorAll("h1").length,mobilePanelTabbable:!!document.querySelector("#mobile-menu:not(.is-open)")&&!document.querySelector("#mobile-menu").inert}});
     ok(m.header&&m.footer&&m.text>=100,label+" missing page content");
+    ok(!m.smallTargets.length,label+" tap targets under 44px: "+m.smallTargets.join(", "));
+    ok(!m.tinyText.length,label+" text under 11.5px: "+m.tinyText.join(", "));
     ok(m.overflow<=1,label+" horizontal overflow "+m.overflow+"px");
     ok(m.wide===0,label+" "+m.wide+" element(s) extend past the viewport");
     ok(m.hL>=-1&&m.hR<=width+1,label+" clipped heading");
@@ -127,8 +132,9 @@ async function desktopInteractions(browser,type){
  const ctx=await browser.newContext({viewport:{width:1440,height:900}});
  const d=await ctx.newPage();await d.route(SPOTIFY,r=>r.abort());await d.goto(BASE,{waitUntil:"load"});
  const btn=d.locator("[data-style-toggle]"),pop=d.locator("#style-options");
+ const openStyle=async()=>{await btn.click();await pop.waitFor({state:"visible"});await d.waitForFunction(()=>document.activeElement?.closest("#style-options"),null,{timeout:3000})};
  ok(!(await pop.isVisible()),t+" dropdown visible while closed");
- await btn.click();
+ await openStyle();
  ok(await pop.isVisible(),t+" Style dropdown did not open");
  ok(await btn.getAttribute("aria-expanded")==="true",t+" aria-expanded failed");
  ok(await pop.locator("[data-theme-choice]").count()===8,t+" dropdown must list 8 themes");
@@ -142,9 +148,9 @@ async function desktopInteractions(browser,type){
  ok(await d.locator("html").getAttribute("data-theme")==="trance",t+" selection broken");
  ok(await closed(pop),t+" dropdown did not close after selection");
  ok(await btn.evaluate(e=>e===document.activeElement),t+" focus not returned to Style button");
- await btn.click();await d.keyboard.press("Escape");ok(await closed(pop),t+" Escape did not dismiss dropdown");
- await btn.click();await d.locator("main").click({position:{x:15,y:50}});ok(await closed(pop),t+" click-outside failed");
- await btn.click();
+ await openStyle();await d.keyboard.press("Escape");ok(await closed(pop),t+" Escape did not dismiss dropdown");
+ await openStyle();await d.locator("main").click({position:{x:15,y:50}});ok(await closed(pop),t+" click-outside failed");
+ await openStyle();
  // keyboard: Tab from the open menu eventually leaves it and closes it
  for(let i=0;i<10;i++)await d.keyboard.press("Tab");
  ok(await closed(pop),t+" tabbing out left the dropdown open");
@@ -159,8 +165,9 @@ async function desktopInteractions(browser,type){
  // nav underline + active state
  ok(await d.locator(".primary-nav a[aria-current='page']").count()===1,t+" exactly one active nav link expected");
  // header gains depth when scrolled
- await d.evaluate(()=>scrollTo(0,400));await d.waitForTimeout(80);
- ok(await d.locator(".site-header.is-scrolled").count()===1,t+" header scroll state missing");
+ await d.evaluate(()=>scrollTo({top:400,behavior:"instant"}));
+ const scrolled=await d.waitForSelector(".site-header.is-scrolled",{timeout:2000}).then(()=>true,()=>false);
+ ok(scrolled,t+" header scroll state missing");
  // Spotify player: poster first, real embed only after a click
  await d.goto(BASE+"music.html",{waitUntil:"load"});
  ok(await d.locator("[data-player] iframe").count()===0,t+" iframe should not exist before the player is requested");
@@ -211,7 +218,16 @@ async function starfield(browser,type){
  const pc=await browser.newContext({viewport:{width:1440,height:700}});const z=await pc.newPage();await z.route(SPOTIFY,r=>r.abort());await z.goto(BASE,{waitUntil:"load"});
  await z.evaluate(()=>scrollTo(0,document.body.scrollHeight));await z.waitForTimeout(500);
  const h1=await hash(z);await z.waitForTimeout(400);const h2=await hash(z);ok(h1.a===h2.a,t+" should pause when off-screen");
+ await z.evaluate(()=>scrollTo(0,0));await z.waitForTimeout(300);
  await pc.close();
+ // backing store is released after a while off-screen and restored on return
+ const fc=await browser.newContext({viewport:{width:1440,height:700}});const f=await fc.newPage();await f.route(SPOTIFY,r=>r.abort());await f.goto(BASE,{waitUntil:"load"});
+ const full=await f.evaluate(()=>document.querySelector(".starfield").width);
+ await f.evaluate(()=>scrollTo(0,document.body.scrollHeight));await f.waitForTimeout(8600);
+ ok(await f.evaluate(()=>document.querySelector(".starfield").width)===1,t+" canvas memory not released while off-screen");
+ await f.evaluate(()=>scrollTo(0,0));await f.waitForTimeout(500);
+ ok(await f.evaluate(()=>document.querySelector(".starfield").width)===full,t+" canvas not restored on return");
+ await fc.close();
 }
 
 async function main(){

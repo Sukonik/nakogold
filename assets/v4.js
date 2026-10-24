@@ -63,7 +63,8 @@
     const open = !isOpen(styleBtn);
     setOpen(menuBtn, menuPanel, false);
     setOpen(styleBtn, stylePanel, open);
-    if (open) firstFocusable(stylePanel)?.focus({preventScroll: true});
+    // Focus on the next frame: the panel only becomes focusable once its visibility style has applied (Safari).
+    if (open) requestAnimationFrame(() => firstFocusable(stylePanel)?.focus({preventScroll: true}));
   });
   menuBtn?.addEventListener("click", () => {
     const open = !isOpen(menuBtn);

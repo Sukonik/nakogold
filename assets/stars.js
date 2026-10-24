@@ -9,22 +9,23 @@
   const root = document.documentElement;
   const MODES = {gold: "twinkle", trance: "warp", house: "rise", techno: "fall", pulsewave: "pulse", synthpop: "sparkle", eurodance: "spin", nightdrive: "drive"};
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-  const TAU = Math.PI * 2, MAX_PIXELS = 1.6e6, FRAME_MS = 33;
+  const TAU = Math.PI * 2, MAX_PIXELS = 1.0e6, FRAME_MS = 33, RELEASE_MS = 8000;
   let w = 0, h = 0, dpr = 1, stars = [], color = "#fff", mode = "twinkle";
-  let raf = 0, last = 0, onScreen = true, shoot = null, nextShoot = 3;
+  let raf = 0, last = 0, freeTimer = 0, freed = false, onScreen = true, shoot = null, nextShoot = 3;
   let tx = 0, ty = 0, px = 0, py = 0, scrollY0 = 0;
 
   const rnd = (a, b) => a + Math.random() * (b - a);
 
   function seed() {
-    const n = Math.round(Math.min(150, Math.max(36, (w * h) / 8000)));
+    const n = Math.round(Math.min(110, Math.max(32, (w * h) / 9000)));
     stars = Array.from({length: n}, () => ({x: rnd(0, w), y: rnd(0, h), z: rnd(.25, 1), p: rnd(0, TAU), v: rnd(.4, 1.2), a: rnd(0, TAU)}));
   }
 
   function size() {
+    freed = false;
     const r = hero.getBoundingClientRect();
     w = Math.max(1, Math.round(r.width)); h = Math.max(1, Math.round(r.height));
-    dpr = Math.min(devicePixelRatio || 1, 1.5);
+    dpr = Math.min(devicePixelRatio || 1, 1.25);
     if (w * h * dpr * dpr > MAX_PIXELS) dpr = Math.sqrt(MAX_PIXELS / (w * h));
     cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -110,10 +111,19 @@
     const dt = Math.min(.1, (now - last) / 1000 || .033); last = now;
     draw(now / 1000, dt);
   }
-  function play() { if (!raf && onScreen && !document.hidden && !reduce.matches) { last = 0; raf = requestAnimationFrame(loop); } }
-  function pause() { cancelAnimationFrame(raf); raf = 0; }
+  function play() {
+    clearTimeout(freeTimer);
+    if (freed) { size(); draw(1.7, 0); }
+    if (!raf && onScreen && !document.hidden && !reduce.matches) { last = 0; raf = requestAnimationFrame(loop); }
+  }
+  // Off-screen or hidden for a while: give the canvas backing store back to the browser.
+  function pause() {
+    cancelAnimationFrame(raf); raf = 0;
+    clearTimeout(freeTimer);
+    freeTimer = setTimeout(() => { cv.width = cv.height = 1; freed = true; }, RELEASE_MS);
+  }
 
-  new ResizeObserver(() => { size(); if (!raf) draw(1.7, 0); }).observe(hero);
+  new ResizeObserver(() => { if (freed && !onScreen) return; size(); if (!raf) draw(1.7, 0); }).observe(hero);
   new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; onScreen ? play() : pause(); }).observe(hero);
   document.addEventListener("visibilitychange", () => document.hidden ? pause() : play());
   new MutationObserver(theme).observe(root, {attributes: true, attributeFilter: ["data-theme"]});
