@@ -1,7 +1,7 @@
 "use strict";
 // WCAG contrast check for every theme's semantic tokens. Pure Node, no browser.
 const fs=require("node:fs");const path=require("node:path");
-const css=fs.readFileSync(path.join(__dirname,"..","css","v3-tokens.css"),"utf8");
+const css=fs.readFileSync(path.join(__dirname,"..","css","v4-tokens.css"),"utf8");
 const themes={};
 for(const m of css.matchAll(/(?::root,)?\[data-theme="(\w+)"\]\{([^}]*)\}/g)){
  const t={};for(const d of m[2].matchAll(/--([\w-]+):\s*(#[0-9a-f]{6})/gi))t[d[1]]=d[2];themes[m[1]]=t;

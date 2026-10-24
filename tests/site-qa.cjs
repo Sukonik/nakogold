@@ -89,7 +89,14 @@ async function mobileInteractions(browser,type){
  ok(Math.abs((await p.evaluate(()=>document.querySelector("h1").getBoundingClientRect().top))-y0)<=1,t+" layout jumped when menu opened");
  ok((await p.locator(".site-header").boundingBox()).height===headerH,t+" header height changed");
  ok(await p.locator("#mobile-menu .theme-option").count()===8,t+" mobile menu must contain all 8 themes");
- const small=await p.evaluate(()=>[...document.querySelectorAll("#mobile-menu a,#mobile-menu .theme-option,.menu-toggle")].filter(e=>e.getBoundingClientRect().height<44).length);
+ ok(await p.locator(".rack > a .led").count()===5,t+" rack should show 5 page units with LEDs");
+ ok(await p.locator(".rack a[aria-current='page'] .unit-live").isVisible(),t+" current page should read ONLINE");
+ const mt=p.locator("[data-mstyle-toggle]"),mlist=p.locator("#mobile-style-list");
+ ok(await mt.getAttribute("aria-expanded")==="false"&&await mlist.evaluate(e=>e.inert),t+" Style unit should start collapsed and inert");
+ await mt.click();
+ ok(await mt.getAttribute("aria-expanded")==="true"&&await mlist.evaluate(e=>!e.inert),t+" Style unit did not expand");
+ await p.locator("#mobile-style-list .theme-option").last().waitFor({state:"visible"});
+ const small=await p.evaluate(()=>[...document.querySelectorAll("#mobile-menu a,#mobile-menu .rack-toggle,.menu-toggle")].filter(e=>e.getBoundingClientRect().height<44).length);
  ok(small===0,t+" "+small+" touch target(s) under 44px");
  for(const theme of themes){
   await p.locator(`#mobile-menu [data-theme-choice='${theme}']`).click();
@@ -97,6 +104,7 @@ async function mobileInteractions(browser,type){
   ok(await p.locator(`#mobile-menu [data-theme-choice='${theme}']`).getAttribute("aria-pressed")==="true",t+" "+theme+" not marked active");
  }
  ok(await p.locator("[data-style-live]").textContent()==="Style: NightDrive",t+" theme change not announced");
+ ok((await p.locator(".rack-toggle [data-style-current]").textContent())==="NightDrive",t+" Style unit does not show the active style");
  await p.keyboard.press("Escape");
  ok(await closed(panel),t+" Escape did not close menu");
  ok(await burger.evaluate(e=>e===document.activeElement),t+" focus not returned to burger after Escape");
@@ -140,20 +148,35 @@ async function desktopInteractions(browser,type){
  // keyboard: Tab from the open menu eventually leaves it and closes it
  for(let i=0;i<10;i++)await d.keyboard.press("Tab");
  ok(await closed(pop),t+" tabbing out left the dropdown open");
+ // gallery: no rainbow placeholder, every image sharp (natural size >= displayed size)
+ await d.goto(BASE+"visuals.html",{waitUntil:"load"});
+ await d.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=500){scrollTo(0,y);await new Promise(r=>setTimeout(r,50))}});
+ await d.waitForTimeout(300);
+ ok(await d.locator("img[src*='nako-gold-24k']").count()===0,t+" retired rainbow image is back in the gallery");
+ const soft=await d.evaluate(()=>[...document.querySelectorAll("main img")].filter(i=>i.complete&&i.currentSrc&&i.naturalWidth<i.clientWidth).map(i=>i.currentSrc));
+ ok(soft.length===0,t+" upscaled (soft) images: "+soft.join(", "));
+ await d.goto(BASE,{waitUntil:"load"});
  // nav underline + active state
  ok(await d.locator(".primary-nav a[aria-current='page']").count()===1,t+" exactly one active nav link expected");
  // header gains depth when scrolled
  await d.evaluate(()=>scrollTo(0,400));await d.waitForTimeout(80);
  ok(await d.locator(".site-header.is-scrolled").count()===1,t+" header scroll state missing");
- // Spotify player
+ // Spotify player: poster first, real embed only after a click
  await d.goto(BASE+"music.html",{waitUntil:"load"});
+ ok(await d.locator("[data-player] iframe").count()===0,t+" iframe should not exist before the player is requested");
+ ok(await d.locator("[data-player-load]").isVisible(),t+" player poster missing");
+ await d.locator("[data-embed^='artist']").click();
+ ok((await d.locator("[data-player-link]").getAttribute("href")).includes("/artist/"),t+" open-in-Spotify link did not follow tab");
+ ok((await d.locator("[data-player-load] strong").textContent())==="Top tracks",t+" poster did not follow tab");
+ await d.locator("[data-embed^='album']").click();
+ await d.locator("[data-player-load]").click();
  const iframe=d.locator("[data-player] iframe");
+ ok(await iframe.count()===1,t+" iframe did not load on click");
  ok((await iframe.getAttribute("src")).includes("/embed/album/5E4aD14AQmhQ1mmQZN985G"),t+" player default is not Album 01");
  ok((await iframe.getAttribute("src")).includes("theme=0"),t+" player not using dark Spotify theme");
  ok((await iframe.boundingBox()).height>=352,t+" player shorter than Spotify's 352px layout");
  await d.locator("[data-embed^='artist']").click();
  ok((await iframe.getAttribute("src")).includes("/embed/artist/"),t+" player tab did not swap embed");
- ok((await d.locator("[data-player-link]").getAttribute("href")).includes("/artist/"),t+" open-in-Spotify link did not follow tab");
  // discovery filter
  await d.goto(BASE+"marketing.html",{waitUntil:"load"});
  await d.locator("#discovery-filters [data-filter]").nth(1).click();
@@ -161,17 +184,47 @@ async function desktopInteractions(browser,type){
  await ctx.close();
 }
 
+async function starfield(browser,type){
+ const t=`[${type}] stars`;
+ const hash=p=>p.evaluate(()=>{const c=document.querySelector(".starfield"),d=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let a=0,n=0;for(let i=3;i<d.length;i+=4){if(d[i]){n++;a=(a*31+i+d[i])|0}}return{n,a}});
+ // moving: every style animates, draws something, and stays inside the hero
+ const ctx=await browser.newContext({viewport:{width:1440,height:900}});
+ for(const theme of themes){
+  await ctx.addInitScript(x=>{try{localStorage.setItem("nako-theme",x)}catch(_){}},theme);
+  const p=await ctx.newPage();await p.route(SPOTIFY,r=>r.abort());await p.goto(BASE,{waitUntil:"load"});await p.waitForTimeout(500);
+  const a=await hash(p);await p.waitForTimeout(450);const b=await hash(p);
+  ok(a.n>0,t+" "+theme+" canvas is blank");ok(a.a!==b.a,t+" "+theme+" is not animating");
+  ok(await p.locator(".badge-genre .ico:visible").count()===1,t+" "+theme+" should show exactly one genre icon");
+  ok(await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=1,t+" "+theme+" overflow");
+  await p.close();await ctx.clearCookies();
+ }
+ await ctx.close();
+ // reduced motion: a still frame, never animated
+ const rm=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"reduce"});
+ const q=await rm.newPage();await q.route(SPOTIFY,r=>r.abort());await q.goto(BASE,{waitUntil:"load"});await q.waitForTimeout(400);
+ const r1=await hash(q);await q.waitForTimeout(400);const r2=await hash(q);
+ ok(r1.n>0,t+" reduced-motion frame is blank");ok(r1.a===r2.a,t+" reduced motion should not animate");
+ const sz=await q.evaluate(()=>{const c=document.querySelector(".starfield");return c.width*c.height});
+ ok(sz<=1.7e6,t+" canvas too large ("+sz+" px)");
+ await rm.close();
+ // pauses when scrolled out of view
+ const pc=await browser.newContext({viewport:{width:1440,height:700}});const z=await pc.newPage();await z.route(SPOTIFY,r=>r.abort());await z.goto(BASE,{waitUntil:"load"});
+ await z.evaluate(()=>scrollTo(0,document.body.scrollHeight));await z.waitForTimeout(500);
+ const h1=await hash(z);await z.waitForTimeout(400);const h2=await hash(z);ok(h1.a===h2.a,t+" should pause when off-screen");
+ await pc.close();
+}
+
 async function main(){
  for(const type of BROWSERS){
   let browser;
   try{browser=await pw[type].launch({headless:true,args:type==="chromium"?["--no-sandbox"]:[]})}catch(e){console.warn(`SKIP ${type}: ${e.message.split("\n")[0]}`);continue}
   try{
-   await layoutChecks(browser,type);await themeSweep(browser,type);await mobileInteractions(browser,type);await desktopInteractions(browser,type);
+   await layoutChecks(browser,type);await themeSweep(browser,type);await mobileInteractions(browser,type);await desktopInteractions(browser,type);await starfield(browser,type);
    console.log(`${type}: ${checks} checks so far`);
   }finally{await browser.close()}
  }
 if(!checks)errors.push("no browser could be launched ("+BROWSERS.join(", ")+")");
  if(errors.length){console.error("QA FAIL:\n"+errors.map(x=>"- "+x).join("\n"));process.exitCode=1}
- else console.log(`PASS V3.1: ${checks} checks · ${BROWSERS.join("+")} · 7 pages × 8 widths, 8 themes, menus, keyboard, player, filters.`)
+ else console.log(`PASS V4: ${checks} checks · ${BROWSERS.join("+")} · 7 pages × 8 widths, 8 themes, menus, keyboard, player, filters.`)
 }
 main().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,4 +1,4 @@
-/* NAKO GOLD V3.1 · breakpoints only; fluid sizing lives with the components. */
+/* NAKO GOLD V4 · breakpoints only; fluid sizing lives with the components. */
 @media(max-width:1050px){
  .hero-art{width:min(100%,320px)}
 }
@@ -12,6 +12,7 @@
  .visual-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:700px){
+ .visual-grid.two{grid-template-columns:1fr}
  .hero-inner{grid-template-columns:1fr}
  .hero-art{width:min(100%,360px);margin:0}
  .split{grid-template-columns:1fr}
@@ -22,14 +23,18 @@
  .visual-grid .frame{max-width:520px}
  .footer-inner{flex-direction:column}
  .player-frame{height:352px}
+ .player-poster{grid-template-columns:1fr;align-content:center;justify-items:start;gap:12px}
+ .player-poster .cover{height:120px}
+ .badge{font-size:.7rem}
 }
 @media(max-width:420px){
  .brand{letter-spacing:.03em;font-size:1rem}
  .btn-row .button{flex:1 1 100%}
- .mobile-style .theme-option{gap:9px;padding:0 10px;font-size:.84rem}
+ .rack-style-list .theme-option{gap:9px;padding:0 10px;font-size:.84rem}
+ .rack a,.rack-toggle{font-size:1.05rem;padding:0 14px}
 }
 @media(max-width:340px){
- .mobile-style .style-options{grid-template-columns:1fr}
+ .rack-style-list .style-options{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}

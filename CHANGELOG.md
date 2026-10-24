@@ -1,5 +1,20 @@
 # NAKO GOLD — Changelog
 
+## v4.0.0 · 2026-10-24 — Polish, personality, lighter pages
+
+- **Clean blacks:** Black & Gold is true `#000` with `#0b0b0b/#141414` surfaces; the other seven styles drop to near-black bases with a hint of hue. Muddy full-page glow removed.
+- **Sheen per style:** each style has its own metallic gradient (`--sheen`) used on headline accents, primary buttons, the active player tab and swatches, plus a one-time sheen sweep across the headline when you switch style.
+- **Unique UI per style (token-driven):** label glyph (◆ ∿ ● // ≋ ✦ ★ ◐), button/frame corner shape, divider style (solid/dashed/dotted), hero pattern (gold glow, trance rings, house sunburst, techno grid, pulsewave bars, synthpop stripes, eurodance diagonals, nightdrive horizon lines), artwork treatment (techno corner brackets, nightdrive scanlines, synthpop offset shadow, eurodance base bar, house arch portrait).
+- **Mobile menu as a server rack** (from GoldenSunLaw): page units with LEDs and `U01…U05`, current page ONLINE, and a collapsible **Style** unit holding all eight styles.
+- **Gallery:** the rainbow `nako-gold-24k` image (soft, upscaled) is retired from the page in favor of the gold wordmark on black; stage section now shows two concept visuals (sunset, Miami). Image options sheet in `docs/qa/v4.0/`.
+- **Lighter pages:** responsive image sizes (480/560w plus originals via `srcset`), Spotify embed loads on first click, `backdrop-filter` removed, `content-visibility` on below-fold sections, theme cross-fade limited to a few elements. A headless Chromium test shows total browser memory ~1–2% lower on image pages; the larger saving (no Spotify iframe until requested) could not be measured in the authoring sandbox.
+- **Badges & icons:** inline SVG sprite (headphones, CD, star, moon, planet, waveform, sparkle, bolt). Home hero shows "Best with headphones / Album 01 / After dark" badges; a genre badge in every footer swaps its icon with the active style (star, moon, CD, bolt, waveform, headphones, sparkle, planet). Poster gets a CD that slides out and spins on hover plus equalizer bars on the play button.
+- **Starfield (home):** one canvas, a different motion per style: Black & Gold twinkle with occasional shooting stars, Trance warp-drift, House rising sparks, Techno falling streaks, PulseWave stars pulsing at 118 BPM, SynthPop 4-point sparkles, EuroDance spinning 5-point stars, NightDrive horizontal drive streaks. Pointer parallax on desktop, scroll parallax on touch; 30 fps cap, pixel cap, pauses off-screen and in background tabs, a single still frame under reduced motion.
+- **Libraries:** Base UI / Chakra are React-only, so patterns (ARIA menu semantics, roving focus, inert panels) are reimplemented in vanilla JS; no new runtime dependencies.
+- **QA:** 1031 checks, adding per-style animation, blank-canvas, pause-offscreen, reduced-motion and genre-icon checks.
+- **Files:** `css/v3-*` and `assets/v3.js` renamed to `v4`; page chrome rebuilt from `tools/build.cjs`.
+- **QA:** 995 checks, now covering the rack menu, collapsed/inert Style unit, poster-then-iframe player, and a guard against soft (upscaled) gallery images.
+
 ## v3.1.0 · 2026-10-24 — Refinement
 
 **Navigation & menus**
