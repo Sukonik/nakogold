@@ -1,5 +1,28 @@
 # NAKO GOLD — Changelog
 
+## v3.1.0 · 2026-10-24 — Refinement
+
+**Navigation & menus**
+- Style ▾ dropdown and mobile hamburger share one open/close mechanic with short fade/slide transitions; closed panels are inert so they can never be tabbed into.
+- Dropdown: ARIA menu semantics, arrow/Home/End keys, wrap-around, focus returns to the button, closes on Escape, outside click and Tab-out. Active theme gets a clear selected state and a polite screen-reader announcement.
+- Mobile: burger morphs to ✕, scrim behind the panel, closes on navigation/Escape/outside tap/resize, scroll lock with stable scrollbar gutter (no layout jump), 44px+ touch targets, single column of themes at ≤340px.
+- Animated gold underline on nav links; header gains depth on scroll. The old "Tune your frequency" row stays retired.
+
+**Themes**
+- All eight themes read the same semantic tokens; added `--line-strong` per theme and spacing/radius/motion tokens. New `tests/contrast.cjs` verifies 104 WCAG pairs (all pass). Theme switches cross-fade for ~0.3s (skipped under reduced motion).
+
+**Spotify**
+- Music page player: framed card, dark Spotify theme, Album 01 / Top tracks switch, Open in Spotify link, reserved 352px height, `color-scheme` fix for the opaque white iframe flash.
+
+**Brand & artwork**
+- NG favicon: heavier strokes and border, no hairlines (readable at 16px). PNGs for 16/32/180/192/512, web manifest, metallic `ng-monogram.svg` for large use (404 page). Approved NG letterforms unchanged.
+- Unified artwork `frame` component (consistent radius, ratio, caption overlay, minimal hover). Home gains the Album 01 cover beside the featured release, replacing a large empty block. Visuals stage image paired with copy instead of floating at two-thirds width. Fixed default `<figure>` margins misaligning galleries.
+- Fluid type via `clamp()`; `text-wrap: balance/pretty`; fixed 320px heading overflow on Artist Management.
+
+**Code & QA**
+- Shared header/footer/head live in `tools/build.cjs` (was copy-pasted across 7 pages); CI fails if stale. CSS rewritten readable (not minified) with no duplicated component rules.
+- QA expanded from 56 route checks plus a handful of interactions to ~980 checks: overflow and clipping at 8 widths × 7 pages, all themes on key pages at phone/desktop, image dimensions/alt, failed requests, focusability, touch targets, layout-jump on menu open, keyboard navigation, player tabs. CI runs Chromium and WebKit.
+
 ## v3.0.0 · 2026-10-23 — Editorial identity + single Style menu
 
 - Replaced the persistent “Tune your frequency” bar, oversized Signal Deck overlay and duplicated navigation with a minimalist single-row header inspired by GoldSea's UI rhythm.

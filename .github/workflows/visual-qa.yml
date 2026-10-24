@@ -2,9 +2,12 @@ name: NAKO GOLD Visual QA
 
 on:
   push:
-    branches: [main, 'v3/**']
+    branches: [main, 'v3/**', 'v3.1/**']
     paths:
       - '*.html'
+      - 'css/**'
+      - 'tools/**'
+      - 'manifest.webmanifest'
       - 'assets/**'
       - 'tests/**'
       - '.github/workflows/visual-qa.yml'
@@ -24,16 +27,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Chromium browser test dependencies
+      - name: Verify shared page chrome is in sync
+        run: node tools/build.cjs --check
+      - name: Theme contrast (WCAG)
+        run: node tests/contrast.cjs
+      - name: Install Chromium and WebKit
         run: |
           npm init -y >/dev/null
           npm install --no-save --no-package-lock playwright
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
       - name: Start local HTTP server
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/nako-qa-server.log 2>&1 &
           sleep 2
       - name: Run responsive and interaction checks
+        env:
+          QA_BROWSERS: chromium,webkit
         run: node tests/site-qa.cjs
       - name: Upload screenshots for visual review
         if: always()
