@@ -4,7 +4,7 @@
 
 [Official website](https://sukonik.github.io/nakogold/) · [Spotify artist](https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L) · [Album 01](https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G)
 
-**Release:** V4.1.0 · true-black surfaces, per-style sheen and UI personality, server-rack mobile menu, lighter pages. GitHub Pages publishes from `main`; a release is live only once its Pages deployment is confirmed.
+**Release:** V4.2.0 · true-black surfaces, per-style sheen and UI personality, server-rack mobile menu, lighter pages. GitHub Pages publishes from `main`; a release is live only once its Pages deployment is confirmed.
 
 > NAKO GOLD blends euphoric trance, high-energy house, and hard-hitting electronic dance music into a sound built for the dance floor. Driven by soaring melodies, explosive drops, futuristic synths, and emotional vocals, NAKO GOLD creates immersive sonic journeys that fuse underground intensity with big-room energy. Every track is an invitation to lose yourself in the music.
 
@@ -24,7 +24,7 @@ The site is **text-first, minimalist and responsive**, inspired by the disciplin
 
 **Artist imagery:** Use the official enhanced neon portrait on Home and About, Album 01 cover on Music, and a small curated Visuals gallery. Additional concept assets remain organized in the repo. Concept stage imagery is **not** proof of real performances.
 
-**Favicon:** Black-and-gold NG monogram at `assets/favicon.svg` (flat, heavier strokes for 16/32px), PNG renders in `assets/icons/` (16, 32, 180 apple-touch, 192/512 manifest), and a richer metallic version for large use at `assets/brand/ng-monogram.svg`.
+**Brand:** The logo pack lives in `assets/brand/pack/` (star, NG, lockups). Favicons and app icons are the NG on a generated 3D star-space tile (`assets/icons/`, plus `favicon.ico` at the root); the standalone star is the header mark and 404 mark (`assets/brand/star-*.webp`); `assets/brand/og-card.png` is the social preview. Regenerate with `tools/make-brand.py`.
 
 **Spotify:** The Music page shows a poster with an Album 01 / Top tracks switch; the real Spotify embed loads on first click, so idle pages carry no iframe. The area is size-reserved (352px) so nothing shifts.
 
@@ -49,7 +49,7 @@ index.html, music.html, visuals.html, about.html, marketing.html
 artist-management.html, 404.html   Shared header/footer/head are stamped between <!--chrome:*--> markers
 manifest.webmanifest
 assets/
-  favicon.svg, icons/, brand/      NG monogram: favicon, PNG sizes, metallic brand mark
+  icons/, brand/, favicon.ico      NG star-space favicons, star marks, social card, logo pack
   stars.js                         Home starfield (per-style motion)
   v4.js                            Header menus, Style selector, Spotify tabs, discovery filters
   images/                          Portraits, album art, logos, concept visuals
@@ -59,7 +59,7 @@ css/
   v4-components.css                Header, menus, buttons, frames, cards, player
   v4-responsive.css                Breakpoints and reduced-motion
 tools/build.cjs                    Shared page chrome (edit once, run `node tools/build.cjs`)
-tools/make-icons.cjs               Renders PNG icons from the SVG masters
+tools/make-brand.py                Rebuilds favicons, star marks and social card from the logo pack
 tests/site-qa.cjs                  Playwright responsive + interaction QA (Chromium, WebKit)
 tests/contrast.cjs                 WCAG contrast check for every theme token pair
 docs/qa/v3.1/, v4.0/              Before/after screenshots and image options
@@ -84,6 +84,7 @@ Run locally: `python3 -m http.server 8765`, then `node tests/contrast.cjs && nod
 
 ## Version history
 
+- **V4.2.0** — Logo pack: NG star-space favicons and app icons, star header mark, new social card.
 - **V4.1.0** — Small-UI audit (44px targets, 11.5px type floor), gradient contrast guard, starfield memory release.
 - **V4.0.0** — True-black base, per-style sheen/glyph/pattern/shape, server-rack mobile menu with Style dropdown, new gallery (gold wordmark replaces the rainbow image; Miami concept added), responsive image sizes, lazy Spotify embed, no backdrop blur.
 - **V3.1.0** — Refinement: animated accessible menus, arrow-key Style menu, Spotify player, contrast-tested tokens, clearer NG icons, balanced artwork layouts, shared page chrome, expanded QA.
