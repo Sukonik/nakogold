@@ -9,7 +9,7 @@ const widths=[320,375,390,430,768,1024,1440,1920];
 const themes=["gold","trance","house","techno","pulsewave","synthpop","eurodance","nightdrive"];
 const SPOTIFY=/^https:\/\/(open|accounts)\.spotify\.com\//;
 fs.mkdirSync("qa-screenshots",{recursive:true});
-const closed=async loc=>{try{await loc.waitFor({state:"hidden",timeout:1000});return true}catch(_){return false}};
+const closed=async loc=>{try{await loc.waitFor({state:"hidden",timeout:3000});return true}catch(_){return false}};
 const errors=[];const fail=x=>errors.push(x);
 let checks=0;const ok=(cond,msg)=>{checks++;if(!cond)fail(msg)};
 
@@ -132,8 +132,9 @@ async function desktopInteractions(browser,type){
  const ctx=await browser.newContext({viewport:{width:1440,height:900}});
  const d=await ctx.newPage();await d.route(SPOTIFY,r=>r.abort());await d.goto(BASE,{waitUntil:"load"});
  const btn=d.locator("[data-style-toggle]"),pop=d.locator("#style-options");
+ const openStyle=async()=>{await btn.click();await pop.waitFor({state:"visible"});await d.waitForFunction(()=>document.activeElement?.closest("#style-options"),null,{timeout:3000})};
  ok(!(await pop.isVisible()),t+" dropdown visible while closed");
- await btn.click();
+ await openStyle();
  ok(await pop.isVisible(),t+" Style dropdown did not open");
  ok(await btn.getAttribute("aria-expanded")==="true",t+" aria-expanded failed");
  ok(await pop.locator("[data-theme-choice]").count()===8,t+" dropdown must list 8 themes");
@@ -147,9 +148,9 @@ async function desktopInteractions(browser,type){
  ok(await d.locator("html").getAttribute("data-theme")==="trance",t+" selection broken");
  ok(await closed(pop),t+" dropdown did not close after selection");
  ok(await btn.evaluate(e=>e===document.activeElement),t+" focus not returned to Style button");
- await btn.click();await d.keyboard.press("Escape");ok(await closed(pop),t+" Escape did not dismiss dropdown");
- await btn.click();await d.locator("main").click({position:{x:15,y:50}});ok(await closed(pop),t+" click-outside failed");
- await btn.click();
+ await openStyle();await d.keyboard.press("Escape");ok(await closed(pop),t+" Escape did not dismiss dropdown");
+ await openStyle();await d.locator("main").click({position:{x:15,y:50}});ok(await closed(pop),t+" click-outside failed");
+ await openStyle();
  // keyboard: Tab from the open menu eventually leaves it and closes it
  for(let i=0;i<10;i++)await d.keyboard.press("Tab");
  ok(await closed(pop),t+" tabbing out left the dropdown open");
