@@ -109,7 +109,8 @@ async function mobileInteractions(browser,type){
  ok(await p.locator("html").getAttribute("data-theme")==="nightdrive",t+" theme not preserved on reload");
  // resizing to desktop must close the menu and release the scroll lock
  await p.goto(BASE,{waitUntil:"load"});await burger.click();await p.setViewportSize({width:1200,height:800});
- ok(await p.evaluate(()=>!document.body.classList.contains("mobile-nav-open")),t+" scroll lock stuck after resize");
+ const released=await p.waitForFunction(()=>!document.body.classList.contains("mobile-nav-open"),null,{timeout:2000}).then(()=>true,()=>false);
+ ok(released,t+" scroll lock stuck after resize");
  await ctx.close();
 }
 
