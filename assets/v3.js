@@ -1,24 +1,149 @@
-/* NAKO GOLD V3: single mobile nav, accessible Style selector; no dependencies. */
-(()=>{"use strict";
-const valid=["gold","trance","house","techno","pulsewave","synthpop","eurodance","nightdrive"];
-const labels={gold:"Black & Gold",trance:"Trance",house:"House",techno:"Techno",pulsewave:"PulseWave",synthpop:"SynthPop",eurodance:"EuroDance",nightdrive:"NightDrive"};
-const root=document.documentElement;
-const styleBtn=document.querySelector("[data-style-toggle]"),stylePanel=document.getElementById("style-options");
-const menuBtn=document.querySelector("[data-menu-toggle]"),menuPanel=document.getElementById("mobile-menu");
-const options=[...document.querySelectorAll("[data-theme-choice]")];
-function currentTheme(){return valid.includes(root.dataset.theme)?root.dataset.theme:"gold"}
-function applyTheme(v){const t=valid.includes(v)?v:"gold";root.dataset.theme=t;try{localStorage.setItem("nako-theme",t)}catch(_){}options.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.themeChoice===t)));const label=document.querySelector("[data-style-current]");if(label)label.textContent=labels[t]}
-applyTheme(currentTheme());
-function setOpen(btn,panel,open,restore){if(!btn||!panel)return;panel.hidden=!open;btn.setAttribute("aria-expanded",String(open));if(btn===menuBtn)document.body.classList.toggle("mobile-nav-open",open);if(!open&&restore)btn.focus()}
-function closeAll(restore){setOpen(styleBtn,stylePanel,false,restore&&document.activeElement&&stylePanel?.contains(document.activeElement));setOpen(menuBtn,menuPanel,false,restore&&document.activeElement&&menuPanel?.contains(document.activeElement))}
-styleBtn?.addEventListener("click",()=>{const next=stylePanel.hidden;setOpen(menuBtn,menuPanel,false,false);setOpen(styleBtn,stylePanel,next,false);if(next)stylePanel.querySelector("[data-theme-choice]")?.focus()});
-menuBtn?.addEventListener("click",()=>{const next=menuPanel.hidden;setOpen(styleBtn,stylePanel,false,false);setOpen(menuBtn,menuPanel,next,false);if(next)menuPanel.querySelector("a")?.focus()});
-options.forEach(b=>b.addEventListener("click",()=>{applyTheme(b.dataset.themeChoice);if(!stylePanel.hidden)setOpen(styleBtn,stylePanel,false,true)}));
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!stylePanel?.hidden||!menuPanel?.hidden){e.preventDefault();closeAll(true)}}});
-document.addEventListener("pointerdown",e=>{if(styleBtn&&!styleBtn.contains(e.target)&&!stylePanel.contains(e.target))setOpen(styleBtn,stylePanel,false,false);if(menuBtn&&!menuBtn.contains(e.target)&&!menuPanel.contains(e.target))setOpen(menuBtn,menuPanel,false,false)});
-menuPanel?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setOpen(menuBtn,menuPanel,false,false)));
-const media=window.matchMedia("(min-width: 851px)");function onChange(){if(media.matches)setOpen(menuBtn,menuPanel,false,false)}media.addEventListener?.("change",onChange);
-const filterBar=document.getElementById("discovery-filters");if(filterBar){const filters=[...filterBar.querySelectorAll("[data-filter]")],cards=[...document.querySelectorAll("#discovery-grid [data-category]")],count=document.getElementById("discovery-count");filterBar.hidden=false;
-filters.forEach(b=>b.addEventListener("click",()=>{const value=b.dataset.filter;filters.forEach(x=>x.setAttribute("aria-pressed",String(b===x)));let shown=0;cards.forEach(card=>{const match=value==="all"||(value==="free"&&card.dataset.cost==="free")||card.dataset.category===value;card.hidden=!match;if(match)shown++});if(count)count.textContent=shown+" platforms shown"}));
-if(count)count.textContent=cards.length+" platforms shown"}
+/* NAKO GOLD V3.1 · header menus, style selector, Spotify player, discovery filters. No dependencies. */
+(() => {
+  "use strict";
+
+  const THEMES = {gold: "Black & Gold", trance: "Trance", house: "House", techno: "Techno", pulsewave: "PulseWave", synthpop: "SynthPop", eurodance: "EuroDance", nightdrive: "NightDrive"};
+  const root = document.documentElement;
+  const $ = (sel, scope = document) => scope.querySelector(sel);
+  const $$ = (sel, scope = document) => [...scope.querySelectorAll(sel)];
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* Theme ------------------------------------------------------------ */
+  const choices = $$("[data-theme-choice]");
+  const label = $("[data-style-current]");
+  const live = $("[data-style-live]");
+  let fadeTimer;
+
+  function applyTheme(value, {announce = false} = {}) {
+    const theme = value in THEMES ? value : "gold";
+    const changed = root.dataset.theme !== theme;
+    if (changed && announce && !reduceMotion.matches) {
+      root.classList.add("theme-fade");
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => root.classList.remove("theme-fade"), 320);
+    }
+    root.dataset.theme = theme;
+    try { localStorage.setItem("nako-theme", theme); } catch (_) { /* storage blocked */ }
+    for (const b of choices) {
+      const on = b.dataset.themeChoice === theme;
+      b.setAttribute(b.hasAttribute("aria-checked") ? "aria-checked" : "aria-pressed", String(on));
+    }
+    if (label) label.textContent = THEMES[theme];
+    const meta = $('meta[name="theme-color"]');
+    if (meta) meta.content = getComputedStyle(root).getPropertyValue("--bg").trim() || meta.content;
+    if (announce && live) live.textContent = "Style: " + THEMES[theme];
+  }
+  applyTheme(root.dataset.theme);
+
+  /* Popovers: one mechanic for the Style menu and the mobile panel ---- */
+  const header = $("[data-header]");
+  const scrim = $("[data-scrim]");
+  const styleBtn = $("[data-style-toggle]"), stylePanel = $("#style-options");
+  const menuBtn = $("[data-menu-toggle]"), menuPanel = $("#mobile-menu");
+  const isOpen = btn => btn?.getAttribute("aria-expanded") === "true";
+
+  function setOpen(btn, panel, open) {
+    if (!btn || !panel || isOpen(btn) === open) return;
+    btn.setAttribute("aria-expanded", String(open));
+    panel.classList.toggle("is-open", open);
+    panel.inert = !open;
+    if (btn === menuBtn) {
+      btn.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+      document.body.classList.toggle("mobile-nav-open", open);
+      if (scrim) scrim.hidden = !open;
+    }
+  }
+  const closeAll = () => { setOpen(styleBtn, stylePanel, false); setOpen(menuBtn, menuPanel, false); };
+  const firstFocusable = panel => $("[aria-checked='true'], [aria-pressed='true'], a", panel) || $("button, a", panel);
+
+  for (const p of [stylePanel, menuPanel]) if (p) p.inert = true; // closed panels never receive focus
+
+  styleBtn?.addEventListener("click", () => {
+    const open = !isOpen(styleBtn);
+    setOpen(menuBtn, menuPanel, false);
+    setOpen(styleBtn, stylePanel, open);
+    if (open) firstFocusable(stylePanel)?.focus({preventScroll: true});
+  });
+  menuBtn?.addEventListener("click", () => {
+    const open = !isOpen(menuBtn);
+    setOpen(styleBtn, stylePanel, false);
+    setOpen(menuBtn, menuPanel, open);
+  });
+
+  for (const b of choices) b.addEventListener("click", () => {
+    applyTheme(b.dataset.themeChoice, {announce: true});
+    if (stylePanel?.contains(b)) { setOpen(styleBtn, stylePanel, false); styleBtn.focus({preventScroll: true}); }
+  });
+
+  // Arrow-key navigation inside the Style menu.
+  stylePanel?.addEventListener("keydown", e => {
+    const items = $$("[data-theme-choice]", stylePanel), i = items.indexOf(document.activeElement);
+    const next = {ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: items.length - 1}[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    items[(next + items.length) % items.length].focus();
+  });
+  styleBtn?.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown" && !isOpen(styleBtn)) { e.preventDefault(); styleBtn.click(); }
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape" || !(isOpen(styleBtn) || isOpen(menuBtn))) return;
+    const owner = isOpen(styleBtn) ? styleBtn : menuBtn;
+    const focusInside = header?.contains(document.activeElement);
+    closeAll();
+    if (focusInside) owner.focus({preventScroll: true});
+  });
+  document.addEventListener("pointerdown", e => {
+    if (header && !header.contains(e.target)) closeAll();
+  });
+  scrim?.addEventListener("click", closeAll);
+  // Tabbing out of an open popover closes it.
+  header?.addEventListener("focusout", e => {
+    if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) closeAll();
+  });
+  for (const a of $$("a", menuPanel || document.createElement("div"))) a.addEventListener("click", closeAll);
+  matchMedia("(min-width: 851px)").addEventListener("change", e => { if (e.matches) closeAll(); });
+
+  // Header gains depth once the page scrolls.
+  if (header) {
+    const onScroll = () => header.classList.toggle("is-scrolled", scrollY > 8);
+    addEventListener("scroll", onScroll, {passive: true});
+    onScroll();
+  }
+
+  /* Spotify player: switch between album and artist embeds ------------ */
+  const player = $("[data-player]");
+  if (player) {
+    const frame = $("iframe", player), link = $("[data-player-link]", player);
+    const tabs = $$("[data-embed]", player);
+    for (const tab of tabs) tab.addEventListener("click", () => {
+      if (tab.getAttribute("aria-pressed") === "true") return;
+      const path = tab.dataset.embed;
+      for (const t of tabs) t.setAttribute("aria-pressed", String(t === tab));
+      frame.title = "NAKO GOLD on Spotify: " + tab.textContent.trim();
+      frame.src = `https://open.spotify.com/embed/${path}?utm_source=generator&theme=0`;
+      if (link) link.href = `https://open.spotify.com/${path}`;
+    });
+  }
+
+  /* Discovery filters -------------------------------------------------- */
+  const filterBar = document.getElementById("discovery-filters");
+  if (filterBar) {
+    const filters = $$("[data-filter]", filterBar), cards = $$("#discovery-grid [data-category]"), count = document.getElementById("discovery-count");
+    const show = n => { if (count) count.textContent = n + " platforms shown"; };
+    filterBar.hidden = false;
+    show(cards.length);
+    for (const b of filters) b.addEventListener("click", () => {
+      const v = b.dataset.filter;
+      let shown = 0;
+      for (const f of filters) f.setAttribute("aria-pressed", String(f === b));
+      for (const c of cards) {
+        const match = v === "all" || (v === "free" && c.dataset.cost === "free") || c.dataset.category === v;
+        c.hidden = !match;
+        if (match) shown++;
+      }
+      show(shown);
+    });
+  }
 })();
