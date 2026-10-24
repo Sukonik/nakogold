@@ -164,8 +164,9 @@ async function desktopInteractions(browser,type){
  // nav underline + active state
  ok(await d.locator(".primary-nav a[aria-current='page']").count()===1,t+" exactly one active nav link expected");
  // header gains depth when scrolled
- await d.evaluate(()=>scrollTo(0,400));await d.waitForTimeout(80);
- ok(await d.locator(".site-header.is-scrolled").count()===1,t+" header scroll state missing");
+ await d.evaluate(()=>scrollTo({top:400,behavior:"instant"}));
+ const scrolled=await d.waitForSelector(".site-header.is-scrolled",{timeout:2000}).then(()=>true,()=>false);
+ ok(scrolled,t+" header scroll state missing");
  // Spotify player: poster first, real embed only after a click
  await d.goto(BASE+"music.html",{waitUntil:"load"});
  ok(await d.locator("[data-player] iframe").count()===0,t+" iframe should not exist before the player is requested");
