@@ -25,7 +25,6 @@
  .player-frame{height:352px}
  .player-poster{grid-template-columns:1fr;align-content:center;justify-items:start;gap:12px}
  .player-poster .cover{height:120px}
- .badge{font-size:.7rem}
 }
 @media(max-width:420px){
  .brand{letter-spacing:.03em;font-size:1rem}

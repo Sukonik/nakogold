@@ -4,7 +4,7 @@
 
 [Official website](https://sukonik.github.io/nakogold/) · [Spotify artist](https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L) · [Album 01](https://open.spotify.com/album/5E4aD14AQmhQ1mmQZN985G)
 
-**Release:** V4.0.0 · true-black surfaces, per-style sheen and UI personality, server-rack mobile menu, lighter pages. GitHub Pages publishes from `main`; a release is live only once its Pages deployment is confirmed.
+**Release:** V4.1.0 · true-black surfaces, per-style sheen and UI personality, server-rack mobile menu, lighter pages. GitHub Pages publishes from `main`; a release is live only once its Pages deployment is confirmed.
 
 > NAKO GOLD blends euphoric trance, high-energy house, and hard-hitting electronic dance music into a sound built for the dance floor. Driven by soaring melodies, explosive drops, futuristic synths, and emotional vocals, NAKO GOLD creates immersive sonic journeys that fuse underground intensity with big-room energy. Every track is an invitation to lose yourself in the music.
 
@@ -84,6 +84,7 @@ Run locally: `python3 -m http.server 8765`, then `node tests/contrast.cjs && nod
 
 ## Version history
 
+- **V4.1.0** — Small-UI audit (44px targets, 11.5px type floor), gradient contrast guard, starfield memory release.
 - **V4.0.0** — True-black base, per-style sheen/glyph/pattern/shape, server-rack mobile menu with Style dropdown, new gallery (gold wordmark replaces the rainbow image; Miami concept added), responsive image sizes, lazy Spotify embed, no backdrop blur.
 - **V3.1.0** — Refinement: animated accessible menus, arrow-key Style menu, Spotify player, contrast-tested tokens, clearer NG icons, balanced artwork layouts, shared page chrome, expanded QA.
 - **V3.0.0** — GoldSea/GoldRang3r-inspired editorial layout, NG favicon, responsive single menu and Style dropdown, 8 themes.

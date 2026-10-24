@@ -28,9 +28,14 @@ async function layoutChecks(browser,type){
      const main=document.querySelector("main"),h=main?.querySelector("h1"),b=h?.getBoundingClientRect();
      const imgs=[...document.images].filter(i=>!i.closest(".brand"));
      const vis=s=>{const e=document.querySelector(s);return !!e&&getComputedStyle(e).display!=="none"};
+     const vis2=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&!e.closest("[hidden],[inert]")&&getComputedStyle(e).visibility!=="hidden"};
+     const smallTargets=[...document.querySelectorAll("a,button")].filter(e=>vis2(e)&&!e.closest(".mobile-panel:not(.is-open),.style-popover:not(.is-open)")&&(e.getBoundingClientRect().height<44||e.getBoundingClientRect().width<44)).map(e=>(e.className||e.tagName)+" "+Math.round(e.getBoundingClientRect().width)+"x"+Math.round(e.getBoundingClientRect().height));
+     const tinyText=[...document.querySelectorAll("header *,main *,footer *")].filter(e=>vis2(e)&&[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())&&parseFloat(getComputedStyle(e).fontSize)<11.5).map(e=>(e.className||e.tagName)+" "+getComputedStyle(e).fontSize);
      const wide=[...document.querySelectorAll("main *")].filter(e=>e.getBoundingClientRect().right>innerWidth+1&&!e.closest("[hidden]")).length;
-     return{overflow:document.documentElement.scrollWidth-innerWidth,theme:document.documentElement.dataset.theme,text:main?.textContent.trim().length||0,hL:b?.left,hR:b?.right,header:!!document.querySelector(".site-header"),footer:!!document.querySelector("footer"),nav:vis(".primary-nav"),burger:vis(".menu-toggle"),legacy:!!document.querySelector(".portal,.frequency-bar"),noDims:imgs.filter(i=>!i.getAttribute("width")||!i.getAttribute("height")).length,noAlt:imgs.filter(i=>!i.hasAttribute("alt")).length,wide,h1:document.querySelectorAll("h1").length,mobilePanelTabbable:!!document.querySelector("#mobile-menu:not(.is-open)")&&!document.querySelector("#mobile-menu").inert}});
+     return{smallTargets,tinyText,overflow:document.documentElement.scrollWidth-innerWidth,theme:document.documentElement.dataset.theme,text:main?.textContent.trim().length||0,hL:b?.left,hR:b?.right,header:!!document.querySelector(".site-header"),footer:!!document.querySelector("footer"),nav:vis(".primary-nav"),burger:vis(".menu-toggle"),legacy:!!document.querySelector(".portal,.frequency-bar"),noDims:imgs.filter(i=>!i.getAttribute("width")||!i.getAttribute("height")).length,noAlt:imgs.filter(i=>!i.hasAttribute("alt")).length,wide,h1:document.querySelectorAll("h1").length,mobilePanelTabbable:!!document.querySelector("#mobile-menu:not(.is-open)")&&!document.querySelector("#mobile-menu").inert}});
     ok(m.header&&m.footer&&m.text>=100,label+" missing page content");
+    ok(!m.smallTargets.length,label+" tap targets under 44px: "+m.smallTargets.join(", "));
+    ok(!m.tinyText.length,label+" text under 11.5px: "+m.tinyText.join(", "));
     ok(m.overflow<=1,label+" horizontal overflow "+m.overflow+"px");
     ok(m.wide===0,label+" "+m.wide+" element(s) extend past the viewport");
     ok(m.hL>=-1&&m.hR<=width+1,label+" clipped heading");
@@ -211,7 +216,16 @@ async function starfield(browser,type){
  const pc=await browser.newContext({viewport:{width:1440,height:700}});const z=await pc.newPage();await z.route(SPOTIFY,r=>r.abort());await z.goto(BASE,{waitUntil:"load"});
  await z.evaluate(()=>scrollTo(0,document.body.scrollHeight));await z.waitForTimeout(500);
  const h1=await hash(z);await z.waitForTimeout(400);const h2=await hash(z);ok(h1.a===h2.a,t+" should pause when off-screen");
+ await z.evaluate(()=>scrollTo(0,0));await z.waitForTimeout(300);
  await pc.close();
+ // backing store is released after a while off-screen and restored on return
+ const fc=await browser.newContext({viewport:{width:1440,height:700}});const f=await fc.newPage();await f.route(SPOTIFY,r=>r.abort());await f.goto(BASE,{waitUntil:"load"});
+ const full=await f.evaluate(()=>document.querySelector(".starfield").width);
+ await f.evaluate(()=>scrollTo(0,document.body.scrollHeight));await f.waitForTimeout(8600);
+ ok(await f.evaluate(()=>document.querySelector(".starfield").width)===1,t+" canvas memory not released while off-screen");
+ await f.evaluate(()=>scrollTo(0,0));await f.waitForTimeout(500);
+ ok(await f.evaluate(()=>document.querySelector(".starfield").width)===full,t+" canvas not restored on return");
+ await fc.close();
 }
 
 async function main(){
