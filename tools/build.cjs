@@ -8,10 +8,14 @@ const NAV=[["index.html","Home"],["music.html","Music"],["visuals.html","Visuals
 const PAGES=["index.html","music.html","visuals.html","about.html","marketing.html","artist-management.html","404.html"];
 const SPOTIFY="https://open.spotify.com/artist/6n4s5S0cGiMsW4oJvIwU2L";
 const ids=THEMES.map(t=>t[0]);
+const ICONS={headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',cd:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3a9 9 0 0 1 7 3.4"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',moon:'<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>',planet:'<circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-20 12 12)"/>',wave:'<path d="M3 12h2l2-6 3 12 3-9 2 6 2-3h4"/>',sparkle:'<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6.2 6.2l2.6 2.6M15.2 15.2l2.6 2.6M17.8 6.2l-2.6 2.6M8.8 15.2l-2.6 2.6"/>',bolt:'<path d="M13 3 5 13h6l-1 8 8-10h-6z"/>'};
+const GENRE_ICON={gold:"star",trance:"moon",house:"cd",techno:"bolt",pulsewave:"wave",synthpop:"headphones",eurodance:"sparkle",nightdrive:"planet"};
+const sprite=`<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">${Object.entries(ICONS).map(([k,v])=>`<symbol id="i-${k}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${v}</symbol>`).join("")}</svg>`;
+const genreBadge=`<span class="badge badge-genre">${ids.map(id=>`<svg class="ico" data-for="${id}" aria-hidden="true"><use href="#i-${GENRE_ICON[id]}"/></svg>`).join("")}<span data-style-current>Black &amp; Gold</span></span>`;
 const options=()=>THEMES.map(([id,label,sw],i)=>`<button type="button" class="theme-option" role="menuitemradio" data-theme-choice="${id}" aria-checked="${i===0}" style="--swatch:linear-gradient(135deg,${sw})"><span class="swatch" aria-hidden="true"></span><span class="theme-name">${label.replace("&","&amp;")}</span><svg class="picked" aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`).join("");
 const links=page=>NAV.map(([h,l])=>`<a href="${h}"${h===page?' aria-current="page"':""}>${l}</a>`).join("");
 const rackLinks=page=>NAV.map(([h,l])=>`<a href="${h}"${h===page?' aria-current="page"':""}><span class="led" aria-hidden="true"></span><span>${l}</span><span class="unit-id" aria-hidden="true"></span><span class="unit-live" aria-hidden="true">Online</span></a>`).join("");
-const header=page=>`<a class="skip-link" href="#main">Skip to content</a>
+const header=page=>`${sprite}<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
 <div class="container nav-shell">
 <a class="brand" href="index.html" aria-label="NAKO GOLD home"><img src="assets/favicon.svg" width="32" height="32" alt=""><span>NAKO <strong>GOLD</strong></span></a>
@@ -28,7 +32,7 @@ const header=page=>`<a class="skip-link" href="#main">Skip to content</a>
 </header>
 <div class="scrim" data-scrim hidden></div>
 <p class="sr-only" role="status" aria-live="polite" data-style-live></p>`;
-const footer=`<footer class="footer"><div class="container footer-inner"><span>© 2026 <strong>NAKO GOLD</strong> · Gold Earth Records</span><span>Electronic music without limits · <a href="${SPOTIFY}" target="_blank" rel="noopener noreferrer">Listen on Spotify ↗</a></span></div></footer>
+const footer=`<footer class="footer"><div class="container footer-inner"><span>© 2026 <strong>NAKO GOLD</strong> · Gold Earth Records</span><span class="footer-end">${genreBadge}<a href="${SPOTIFY}" target="_blank" rel="noopener noreferrer">Listen on Spotify ↗</a></span></div></footer>
 <script defer src="assets/v4.js?v=${VERSION}"></script>`;
 const headAssets=`<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png"><link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="css/v4-tokens.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-base.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-components.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-responsive.css?v=${VERSION}"><script>try{const t=localStorage.getItem("nako-theme");if(${JSON.stringify(ids)}.includes(t))document.documentElement.dataset.theme=t}catch(_){}</script><noscript><style>.mobile-panel{visibility:visible;opacity:1;transform:none;position:static}.menu-toggle,.style-wrap{display:none!important}</style></noscript>`;
 const block=(name,body)=>`<!--${name}-->${body}<!--/${name}-->`;

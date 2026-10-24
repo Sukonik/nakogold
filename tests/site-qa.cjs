@@ -184,12 +184,42 @@ async function desktopInteractions(browser,type){
  await ctx.close();
 }
 
+async function starfield(browser,type){
+ const t=`[${type}] stars`;
+ const hash=p=>p.evaluate(()=>{const c=document.querySelector(".starfield"),d=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let a=0,n=0;for(let i=3;i<d.length;i+=4){if(d[i]){n++;a=(a*31+i+d[i])|0}}return{n,a}});
+ // moving: every style animates, draws something, and stays inside the hero
+ const ctx=await browser.newContext({viewport:{width:1440,height:900}});
+ for(const theme of themes){
+  await ctx.addInitScript(x=>{try{localStorage.setItem("nako-theme",x)}catch(_){}},theme);
+  const p=await ctx.newPage();await p.route(SPOTIFY,r=>r.abort());await p.goto(BASE,{waitUntil:"load"});await p.waitForTimeout(500);
+  const a=await hash(p);await p.waitForTimeout(450);const b=await hash(p);
+  ok(a.n>0,t+" "+theme+" canvas is blank");ok(a.a!==b.a,t+" "+theme+" is not animating");
+  ok(await p.locator(".badge-genre .ico:visible").count()===1,t+" "+theme+" should show exactly one genre icon");
+  ok(await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=1,t+" "+theme+" overflow");
+  await p.close();await ctx.clearCookies();
+ }
+ await ctx.close();
+ // reduced motion: a still frame, never animated
+ const rm=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"reduce"});
+ const q=await rm.newPage();await q.route(SPOTIFY,r=>r.abort());await q.goto(BASE,{waitUntil:"load"});await q.waitForTimeout(400);
+ const r1=await hash(q);await q.waitForTimeout(400);const r2=await hash(q);
+ ok(r1.n>0,t+" reduced-motion frame is blank");ok(r1.a===r2.a,t+" reduced motion should not animate");
+ const sz=await q.evaluate(()=>{const c=document.querySelector(".starfield");return c.width*c.height});
+ ok(sz<=1.7e6,t+" canvas too large ("+sz+" px)");
+ await rm.close();
+ // pauses when scrolled out of view
+ const pc=await browser.newContext({viewport:{width:1440,height:700}});const z=await pc.newPage();await z.route(SPOTIFY,r=>r.abort());await z.goto(BASE,{waitUntil:"load"});
+ await z.evaluate(()=>scrollTo(0,document.body.scrollHeight));await z.waitForTimeout(500);
+ const h1=await hash(z);await z.waitForTimeout(400);const h2=await hash(z);ok(h1.a===h2.a,t+" should pause when off-screen");
+ await pc.close();
+}
+
 async function main(){
  for(const type of BROWSERS){
   let browser;
   try{browser=await pw[type].launch({headless:true,args:type==="chromium"?["--no-sandbox"]:[]})}catch(e){console.warn(`SKIP ${type}: ${e.message.split("\n")[0]}`);continue}
   try{
-   await layoutChecks(browser,type);await themeSweep(browser,type);await mobileInteractions(browser,type);await desktopInteractions(browser,type);
+   await layoutChecks(browser,type);await themeSweep(browser,type);await mobileInteractions(browser,type);await desktopInteractions(browser,type);await starfield(browser,type);
    console.log(`${type}: ${checks} checks so far`);
   }finally{await browser.close()}
  }

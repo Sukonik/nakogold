@@ -20,6 +20,8 @@ The site is **text-first, minimalist and responsive**, inspired by the disciplin
 
 **Eight styles:** Black & Gold (**default**), Trance, House, Techno, PulseWave, SynthPop, EuroDance, NightDrive. Each has a true-black base, its own metallic **sheen** gradient, label glyph, corner shape, divider style, hero pattern and artwork treatment, all as tokens in `css/v4-tokens.css` plus a few signature rules in `v4-components.css`; selecting one saves it as `nako-theme` in localStorage. Content does not change between themes.
 
+**Starfield & badges:** the home hero runs a stars canvas (`assets/stars.js`) with a different motion per style; badges use an inline SVG sprite built by `tools/build.cjs`. Both respect reduced motion.
+
 **Artist imagery:** Use the official enhanced neon portrait on Home and About, Album 01 cover on Music, and a small curated Visuals gallery. Additional concept assets remain organized in the repo. Concept stage imagery is **not** proof of real performances.
 
 **Favicon:** Black-and-gold NG monogram at `assets/favicon.svg` (flat, heavier strokes for 16/32px), PNG renders in `assets/icons/` (16, 32, 180 apple-touch, 192/512 manifest), and a richer metallic version for large use at `assets/brand/ng-monogram.svg`.
@@ -48,6 +50,7 @@ artist-management.html, 404.html   Shared header/footer/head are stamped between
 manifest.webmanifest
 assets/
   favicon.svg, icons/, brand/      NG monogram: favicon, PNG sizes, metallic brand mark
+  stars.js                         Home starfield (per-style motion)
   v4.js                            Header menus, Style selector, Spotify tabs, discovery filters
   images/                          Portraits, album art, logos, concept visuals
 css/
