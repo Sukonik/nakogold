@@ -1,5 +1,16 @@
 # NAKO GOLD — Changelog
 
+## v4.0.0 · 2026-10-24 — Polish, personality, lighter pages
+
+- **Clean blacks:** Black & Gold is true `#000` with `#0b0b0b/#141414` surfaces; the other seven styles drop to near-black bases with a hint of hue. Muddy full-page glow removed.
+- **Sheen per style:** each style has its own metallic gradient (`--sheen`) used on headline accents, primary buttons, the active player tab and swatches, plus a one-time sheen sweep across the headline when you switch style.
+- **Unique UI per style (token-driven):** label glyph (◆ ∿ ● // ≋ ✦ ★ ◐), button/frame corner shape, divider style (solid/dashed/dotted), hero pattern (gold glow, trance rings, house sunburst, techno grid, pulsewave bars, synthpop stripes, eurodance diagonals, nightdrive horizon lines), artwork treatment (techno corner brackets, nightdrive scanlines, synthpop offset shadow, eurodance base bar, house arch portrait).
+- **Mobile menu as a server rack** (from GoldenSunLaw): page units with LEDs and `U01…U05`, current page ONLINE, and a collapsible **Style** unit holding all eight styles.
+- **Gallery:** the rainbow `nako-gold-24k` image (soft, upscaled) is retired from the page in favor of the gold wordmark on black; stage section now shows two concept visuals (sunset, Miami). Image options sheet in `docs/qa/v4.0/`.
+- **Lighter pages:** responsive image sizes (480/560w plus originals via `srcset`), Spotify embed loads on first click, `backdrop-filter` removed, `content-visibility` on below-fold sections, theme cross-fade limited to a few elements. A headless Chromium test shows total browser memory ~1–2% lower on image pages; the larger saving (no Spotify iframe until requested) could not be measured in the authoring sandbox.
+- **Files:** `css/v3-*` and `assets/v3.js` renamed to `v4`; page chrome rebuilt from `tools/build.cjs`.
+- **QA:** 995 checks, now covering the rack menu, collapsed/inert Style unit, poster-then-iframe player, and a guard against soft (upscaled) gallery images.
+
 ## v3.1.0 · 2026-10-24 — Refinement
 
 **Navigation & menus**

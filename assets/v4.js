@@ -1,4 +1,4 @@
-/* NAKO GOLD V3.1 · header menus, style selector, Spotify player, discovery filters. No dependencies. */
+/* NAKO GOLD V4 · header menus, style selector, Spotify player, discovery filters. No dependencies. */
 (() => {
   "use strict";
 
@@ -10,7 +10,7 @@
 
   /* Theme ------------------------------------------------------------ */
   const choices = $$("[data-theme-choice]");
-  const label = $("[data-style-current]");
+  const labels = $$("[data-style-current]");
   const live = $("[data-style-live]");
   let fadeTimer;
 
@@ -28,7 +28,7 @@
       const on = b.dataset.themeChoice === theme;
       b.setAttribute(b.hasAttribute("aria-checked") ? "aria-checked" : "aria-pressed", String(on));
     }
-    if (label) label.textContent = THEMES[theme];
+    for (const l of labels) l.textContent = THEMES[theme];
     const meta = $('meta[name="theme-color"]');
     if (meta) meta.content = getComputedStyle(root).getPropertyValue("--bg").trim() || meta.content;
     if (announce && live) live.textContent = "Style: " + THEMES[theme];
@@ -51,6 +51,7 @@
       btn.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
       document.body.classList.toggle("mobile-nav-open", open);
       if (scrim) scrim.hidden = !open;
+      if (!open) resetMobileStyle();
     }
   }
   const closeAll = () => { setOpen(styleBtn, stylePanel, false); setOpen(menuBtn, menuPanel, false); };
@@ -69,6 +70,17 @@
     setOpen(styleBtn, stylePanel, false);
     setOpen(menuBtn, menuPanel, open);
   });
+
+  // Mobile rack: Style is a collapsible unit inside the menu.
+  const mToggle = $("[data-mstyle-toggle]"), mList = $("#mobile-style-list");
+  if (mList) mList.inert = true;
+  mToggle?.addEventListener("click", () => {
+    const open = mToggle.getAttribute("aria-expanded") !== "true";
+    mToggle.setAttribute("aria-expanded", String(open));
+    mList.classList.toggle("is-open", open);
+    mList.inert = !open;
+  });
+  const resetMobileStyle = () => { mToggle?.setAttribute("aria-expanded", "false"); mList?.classList.remove("is-open"); if (mList) mList.inert = true; };
 
   for (const b of choices) b.addEventListener("click", () => {
     applyTheme(b.dataset.themeChoice, {announce: true});
@@ -112,17 +124,31 @@
     onScroll();
   }
 
-  /* Spotify player: switch between album and artist embeds ------------ */
+  /* Spotify player: a poster until first click, then the real embed (keeps idle pages light). */
   const player = $("[data-player]");
   if (player) {
-    const frame = $("iframe", player), link = $("[data-player-link]", player);
+    const frame = $(".player-frame", player), poster = $("[data-player-load]", player), link = $("[data-player-link]", player);
     const tabs = $$("[data-embed]", player);
+    let path = tabs.find(t => t.getAttribute("aria-pressed") === "true")?.dataset.embed, iframe = null;
+    const src = p => `https://open.spotify.com/embed/${p}?utm_source=generator&theme=0`;
+    const paint = tab => {
+      $("img", poster).src = tab.dataset.poster;
+      $("strong", poster).textContent = tab.dataset.title;
+      $("small", poster).textContent = tab.dataset.sub;
+    };
+    const load = () => {
+      iframe = Object.assign(document.createElement("iframe"), {title: "NAKO GOLD on Spotify", src: src(path), loading: "lazy", allow: "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture", allowFullscreen: true});
+      iframe.width = "100%"; iframe.height = "352";
+      frame.append(iframe);
+      poster.hidden = true;
+    };
+    poster?.addEventListener("click", load);
     for (const tab of tabs) tab.addEventListener("click", () => {
       if (tab.getAttribute("aria-pressed") === "true") return;
-      const path = tab.dataset.embed;
+      path = tab.dataset.embed;
       for (const t of tabs) t.setAttribute("aria-pressed", String(t === tab));
-      frame.title = "NAKO GOLD on Spotify: " + tab.textContent.trim();
-      frame.src = `https://open.spotify.com/embed/${path}?utm_source=generator&theme=0`;
+      if (iframe) { iframe.title = "NAKO GOLD on Spotify: " + tab.textContent.trim(); iframe.src = src(path); }
+      else paint(tab);
       if (link) link.href = `https://open.spotify.com/${path}`;
     });
   }
