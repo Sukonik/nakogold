@@ -6,7 +6,7 @@
 .site-header.is-scrolled{border-color:var(--line-strong);box-shadow:0 10px 24px rgba(0,0,0,.5)}
 .nav-shell{display:flex;align-items:center;gap:clamp(12px,2vw,24px);height:var(--header-h)}
 .brand{display:inline-flex;align-items:center;gap:10px;min-height:44px;min-width:0;white-space:nowrap;font-size:1.08rem;font-weight:830;letter-spacing:.06em}
-.brand img{width:32px;height:32px;flex:none;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6))}
+.brand img{width:40px;height:40px;flex:none}
 .brand strong{color:var(--accent)}
 .primary-nav{display:flex;gap:2px;align-items:center;margin-left:auto}
 .primary-nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 clamp(10px,1.1vw,16px);color:var(--muted);font-size:.86rem;font-weight:650;border-radius:var(--radius-sm);transition:color var(--dur)}
@@ -167,7 +167,7 @@ body.mobile-nav-open{overflow:hidden}
 .theme-fade body,.theme-fade .site-header,.theme-fade .card,.theme-fade .frame,.theme-fade .button,.theme-fade .player{transition:background-color .28s ease,border-color .28s ease,color .28s ease}
 .theme-fade h1 .accent,.theme-fade .hero h1 span{animation:sheen-sweep .9s var(--ease)}
 @keyframes sheen-sweep{from{background-position:100% 0}to{background-position:0 0}}
-.lost-mark{width:72px;height:72px;margin-bottom:var(--space-5);filter:drop-shadow(0 4px 14px rgba(0,0,0,.7))}
+.lost-mark{width:80px;height:80px;margin-bottom:var(--space-5)}
 
 /* Spotify poster: the real embed loads on first click, so the page carries no iframe until you want it. */
 .player-poster{position:absolute;inset:0;z-index:1;display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);align-items:center;gap:clamp(24px,5vw,56px);padding:clamp(16px,3vw,32px);border:0;background:var(--surface);color:var(--ink);text-align:left;overflow:hidden}

@@ -18,7 +18,7 @@ const rackLinks=page=>NAV.map(([h,l])=>`<a href="${h}"${h===page?' aria-current=
 const header=page=>`${sprite}<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
 <div class="container nav-shell">
-<a class="brand" href="index.html" aria-label="NAKO GOLD home"><img src="assets/brand/star-96.webp" width="32" height="32" alt=""><span>NAKO <strong>GOLD</strong></span></a>
+<a class="brand" href="index.html" aria-label="NAKO GOLD home"><img src="assets/brand/ng-tile-192.webp" width="40" height="40" alt=""><span>NAKO <strong>GOLD</strong></span></a>
 <nav class="primary-nav" aria-label="Primary">${links(page)}</nav>
 <div class="header-controls">
 <div class="style-wrap">

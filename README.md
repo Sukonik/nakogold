@@ -24,7 +24,7 @@ The site is **text-first, minimalist and responsive**, inspired by the disciplin
 
 **Artist imagery:** Use the official enhanced neon portrait on Home and About, Album 01 cover on Music, and a small curated Visuals gallery. Additional concept assets remain organized in the repo. Concept stage imagery is **not** proof of real performances.
 
-**Brand:** The logo pack lives in `assets/brand/pack/` (star, NG, lockups). Favicons and app icons are the NG on a generated 3D star-space tile (`assets/icons/`, plus `favicon.ico` at the root); the standalone star is the header mark and 404 mark (`assets/brand/star-*.webp`); `assets/brand/og-card.png` is the social preview. Regenerate with `tools/make-brand.py`.
+**Brand:** The logo pack lives in `assets/brand/pack/` (star, NG, lockups). The NG on a generated 3D star-space tile is the NAKO GOLD logo and favicon: header and 404 mark (`assets/brand/ng-tile-192.webp`), tab icons and app icons (`assets/icons/`, plus `favicon.ico` at the root). The standalone star is kept for reuse (`assets/brand/star-*.webp`), and `assets/brand/og-card.png` is the social preview. Regenerate with `tools/make-brand.py`.
 
 **Spotify:** The Music page shows a poster with an Album 01 / Top tracks switch; the real Spotify embed loads on first click, so idle pages carry no iframe. The area is size-reserved (352px) so nothing shifts.
 
@@ -49,7 +49,7 @@ index.html, music.html, visuals.html, about.html, marketing.html
 artist-management.html, 404.html   Shared header/footer/head are stamped between <!--chrome:*--> markers
 manifest.webmanifest
 assets/
-  icons/, brand/, favicon.ico      NG star-space favicons, star marks, social card, logo pack
+  icons/, brand/, favicon.ico      NG star-space logo and favicons, star marks, social card, logo pack
   stars.js                         Home starfield (per-style motion)
   v4.js                            Header menus, Style selector, Spotify tabs, discovery filters
   images/                          Portraits, album art, logos, concept visuals
@@ -84,7 +84,7 @@ Run locally: `python3 -m http.server 8765`, then `node tests/contrast.cjs && nod
 
 ## Version history
 
-- **V4.2.0** — Logo pack: NG star-space favicons and app icons, star header mark, new social card.
+- **V4.2.0** — Logo pack: NG star-space tile as logo and favicons, standalone star kept for reuse, new social card.
 - **V4.1.0** — Small-UI audit (44px targets, 11.5px type floor), gradient contrast guard, starfield memory release.
 - **V4.0.0** — True-black base, per-style sheen/glyph/pattern/shape, server-rack mobile menu with Style dropdown, new gallery (gold wordmark replaces the rainbow image; Miami concept added), responsive image sizes, lazy Spotify embed, no backdrop blur.
 - **V3.1.0** — Refinement: animated accessible menus, arrow-key Style menu, Spotify player, contrast-tested tokens, clearer NG icons, balanced artwork layouts, shared page chrome, expanded QA.

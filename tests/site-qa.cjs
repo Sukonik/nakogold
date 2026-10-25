@@ -234,8 +234,9 @@ async function brandAssets(browser,type){
  const t=`[${type}] brand`;
  const ctx=await browser.newContext({viewport:{width:1440,height:900}});const p=await ctx.newPage();await p.route(SPOTIFY,r=>r.abort());
  await p.goto(BASE,{waitUntil:"load"});
- const refs=await p.evaluate(()=>({icons:[...document.querySelectorAll("link[rel~='icon'],link[rel='apple-touch-icon'],link[rel='manifest']")].map(l=>({href:l.getAttribute("href").split("?")[0],rel:l.rel,sizes:l.getAttribute("sizes")})),og:document.querySelector('meta[property="og:image"]')?.content,tw:document.querySelector('meta[name="twitter:image"]')?.content,brand:(()=>{const i=document.querySelector(".brand img");return{ok:i.complete&&i.naturalWidth>=64,w:i.naturalWidth}})()}));
- ok(refs.brand.ok,t+" header mark did not load sharp enough ("+refs.brand.w+"px wide for a 32px slot)");
+ const refs=await p.evaluate(()=>({icons:[...document.querySelectorAll("link[rel~='icon'],link[rel='apple-touch-icon'],link[rel='manifest']")].map(l=>({href:l.getAttribute("href").split("?")[0],rel:l.rel,sizes:l.getAttribute("sizes")})),og:document.querySelector('meta[property="og:image"]')?.content,tw:document.querySelector('meta[name="twitter:image"]')?.content,brand:(()=>{const i=document.querySelector(".brand img");return{ok:i.complete&&i.naturalWidth>=64,w:i.naturalWidth,src:i.getAttribute("src")}})()}));
+ ok(/ng-tile/.test(refs.brand.src),t+" header logo must be the NG star-space tile, got "+refs.brand.src);
+ ok(refs.brand.ok,t+" header mark did not load sharp enough ("+refs.brand.w+"px wide for a 40px slot)");
  const png=buf=>buf.readUInt32BE(16)+"x"+buf.readUInt32BE(20);
  for(const l of refs.icons){
   const r=await ctx.request.get(BASE+l.href);ok(r.status()===200,t+" "+l.href+" returned "+r.status());

@@ -1,5 +1,5 @@
 """Builds the star-space tile, favicons, social card and star marks from the NAKO GOLD logo pack.
-Usage: python3 -I tools/make-brand.py assets/brand/pack /tmp/brand-out, then copy favicon-*, apple-touch-icon, icon-* into assets/icons/ (favicon.ico also to the repo root), og-card.png / ng-tile-512.png / star-*.webp into assets/brand/."""
+Usage: python3 -I tools/make-brand.py assets/brand/pack /tmp/brand-out, then copy favicon-*, apple-touch-icon, icon-* into assets/icons/ (favicon.ico also to the repo root), og-card.png / ng-tile-*.png|webp / star-*.webp into assets/brand/."""
 import sys, os, math
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
@@ -108,8 +108,10 @@ W, H = 2400, 1260
 card = starfield(W, H, 330, 21)
 card = place(card, LOCKUP, .56, glow=True, shadow=True).convert("RGB").resize((1200, 630), Image.LANCZOS)
 card.save(f"{OUT}/og-card.png", optimize=True)
+# --- logo tile (the approved look: rounded, bevelled, star field) for the header and 404 marks ---
+tile(192, 70, .85, .18, ss=6).save(f"{OUT}/ng-tile-192.webp", "WEBP", quality=92, method=6)
 # --- star marks (transparent) ---
-for n in (96, 256, 512):
+for n in (256, 512):
     s = STAR.copy(); s.thumbnail((n, n), Image.LANCZOS)
     canvas = Image.new("RGBA", (n, n), (0, 0, 0, 0)); canvas.paste(s, ((n - s.width) // 2, (n - s.height) // 2), s)
     canvas.save(f"{OUT}/star-{n}.webp", "WEBP", quality=90, method=6)
