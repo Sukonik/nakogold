@@ -1,5 +1,15 @@
 # NAKO GOLD — Changelog
 
+## v4.1.0 · 2026-10-24 — Small-UI and memory pass
+
+- **Tap targets:** logo link, Style button, player tabs and footer links are now at least 44px tall (an audit across 6 pages at phone and desktop widths found them at 21–40px). A regression test fails any visible link or button under 44px.
+- **Type floor:** labels, status tags, menu eyebrows and rack unit IDs were 10.6–11.2px; the floor is now 11.5px (also tested).
+- **Details:** no grey tap flash on touch, kicker glyphs and badge icons vertically aligned, footer genre badge sized with its neighbours.
+- **Contrast:** the gradient behind buttons and player tabs is now checked at every stop (136 token pairs total). PulseWave's mid stop was 4.14:1 and was lightened to pass 4.5:1.
+- **Memory:** the starfield canvas is capped at about 1 megapixel (was 1.6), uses at most 110 stars, and its backing store is released after 8 s off-screen or in a hidden tab and restored on return. Headless Chromium measured about 481 MB to 452 MB (-6%) with the hero scrolled away; about -1% with the hero in view. Removed an unused 480px image derivative.
+- **Safari focus:** the Style menu now focuses its first item on the next frame, once the panel is actually focusable (WebKit could miss it when focus ran in the same tick the menu opened).
+- **QA:** 1145 checks; menu and scroll checks wait for state instead of fixed delays.
+
 ## v4.0.0 · 2026-10-24 — Polish, personality, lighter pages
 
 - **Clean blacks:** Black & Gold is true `#000` with `#0b0b0b/#141414` surfaces; the other seven styles drop to near-black bases with a hint of hue. Muddy full-page glow removed.
