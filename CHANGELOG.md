@@ -6,6 +6,7 @@
 - **Standalone star:** used as the header mark and on the 404 page; transparent WebP at 96/256/512 px in `assets/brand/` for use elsewhere.
 - **Social card:** new 1200×630 `og-card.png` (lockup on star space) for Open Graph and Twitter previews, replacing the album-cover preview.
 - **Logo pack kept as source** in `assets/brand/pack/` (star, NG, both lockups); `tools/make-brand.py` regenerates every derived asset.
+- **True-black chrome:** `theme-color` meta and the web manifest now use `#000000` (they still said the old `#080808`); both manifest icons are marked maskable.
 - Removed the retired NG monogram SVGs and `tools/make-icons.cjs`.
 - **QA:** 1160 checks; new brand checks: every icon link resolves at its declared size, `/favicon.ico` exists, Apple icon is 180×180, social images are 1200×630, header mark loads at 3× density.
 
