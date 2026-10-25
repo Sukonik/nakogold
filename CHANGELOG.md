@@ -1,5 +1,16 @@
 # NAKO GOLD — Changelog
 
+## v4.2.0 · 2026-10-24 — Logo pack: NG favicons on star space, standalone star
+
+- **New NG on a 3D star-space backdrop:** generated black star-field tile (pure black, tinted far/near stars with glow and flare, gold-to-bronze bevel rim, soft depth shadow and a warm lift behind the lettering). Used for all favicons and app icons: 16/32/48 px (fewer stars and no gloss so the lettering stays crisp), `favicon.ico` (16/32/48, also at the site root where browsers look by default), 180 px Apple touch icon, and 192/512 px manifest icons (full-bleed with the lettering inside the maskable safe zone).
+- **NG tile is the NAKO GOLD logo:** the same rounded, bevelled star-space tile is now the header mark (40 px) and the 404 mark, as well as the favicon, so the brand reads as one thing everywhere. Rendered at 192 px (`assets/brand/ng-tile-192.webp`, 7 KB) so it stays sharp on 3-4x screens.
+- **Standalone star:** kept as a library asset (transparent WebP at 256/512 px in `assets/brand/`) for use elsewhere as needed; not placed on pages yet.
+- **Social card:** new 1200×630 `og-card.png` (lockup on star space) for Open Graph and Twitter previews, replacing the album-cover preview.
+- **Logo pack kept as source** in `assets/brand/pack/` (star, NG, both lockups); `tools/make-brand.py` regenerates every derived asset.
+- **True-black chrome:** `theme-color` meta and the web manifest now use `#000000` (they still said the old `#080808`); both manifest icons are marked maskable.
+- Removed the retired NG monogram SVGs and `tools/make-icons.cjs`.
+- **QA:** 1160 checks; new brand checks: every icon link resolves at its declared size, `/favicon.ico` exists, Apple icon is 180×180, social images are 1200×630, header logo is the NG tile and loads at 3× density or better.
+
 ## v4.1.0 · 2026-10-24 — Small-UI and memory pass
 
 - **Tap targets:** logo link, Style button, player tabs and footer links are now at least 44px tall (an audit across 6 pages at phone and desktop widths found them at 21–40px). A regression test fails any visible link or button under 44px.

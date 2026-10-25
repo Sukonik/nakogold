@@ -18,7 +18,7 @@ const rackLinks=page=>NAV.map(([h,l])=>`<a href="${h}"${h===page?' aria-current=
 const header=page=>`${sprite}<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
 <div class="container nav-shell">
-<a class="brand" href="index.html" aria-label="NAKO GOLD home"><img src="assets/favicon.svg" width="32" height="32" alt=""><span>NAKO <strong>GOLD</strong></span></a>
+<a class="brand" href="index.html" aria-label="NAKO GOLD home"><img src="assets/brand/ng-tile-192.webp" width="40" height="40" alt=""><span>NAKO <strong>GOLD</strong></span></a>
 <nav class="primary-nav" aria-label="Primary">${links(page)}</nav>
 <div class="header-controls">
 <div class="style-wrap">
@@ -34,7 +34,7 @@ const header=page=>`${sprite}<a class="skip-link" href="#main">Skip to content</
 <p class="sr-only" role="status" aria-live="polite" data-style-live></p>`;
 const footer=`<footer class="footer"><div class="container footer-inner"><span>© 2026 <strong>NAKO GOLD</strong> · Gold Earth Records</span><span class="footer-end">${genreBadge}<a href="${SPOTIFY}" target="_blank" rel="noopener noreferrer">Listen on Spotify ↗</a></span></div></footer>
 <script defer src="assets/v4.js?v=${VERSION}"></script>`;
-const headAssets=`<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png"><link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="css/v4-tokens.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-base.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-components.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-responsive.css?v=${VERSION}"><script>try{const t=localStorage.getItem("nako-theme");if(${JSON.stringify(ids)}.includes(t))document.documentElement.dataset.theme=t}catch(_){}</script><noscript><style>.mobile-panel{visibility:visible;opacity:1;transform:none;position:static}.menu-toggle,.style-wrap{display:none!important}</style></noscript>`;
+const headAssets=`<link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png"><link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png"><link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png"><link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="css/v4-tokens.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-base.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-components.css?v=${VERSION}"><link rel="stylesheet" href="css/v4-responsive.css?v=${VERSION}"><script>try{const t=localStorage.getItem("nako-theme");if(${JSON.stringify(ids)}.includes(t))document.documentElement.dataset.theme=t}catch(_){}</script><noscript><style>.mobile-panel{visibility:visible;opacity:1;transform:none;position:static}.menu-toggle,.style-wrap{display:none!important}</style></noscript>`;
 const block=(name,body)=>`<!--${name}-->${body}<!--/${name}-->`;
 const re=name=>new RegExp(`<!--${name}-->[\\s\\S]*?<!--/${name}-->`);
 let stale=0;
